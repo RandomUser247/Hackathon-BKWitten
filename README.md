@@ -1,8 +1,8 @@
-"# Hackathon-BKWitten" 
+# Hackathon-BKWitten
 
 
 
-### used Versions
+## used Versions
   Angular CLI: 15.2.7
   Node: 18.16.0
   @angular-devkit/architect    0.1502.7 
