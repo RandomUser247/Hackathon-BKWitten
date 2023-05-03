@@ -19,5 +19,7 @@
 ### Project Setup
 
   Clone Repository to your machine
+  
   install Node.js
+  
   run 'npm install' to fetch resolve dependencies
