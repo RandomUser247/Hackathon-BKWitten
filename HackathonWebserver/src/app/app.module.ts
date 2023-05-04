@@ -11,6 +11,7 @@ import { ProjectComponent } from "./project/project.component";
 import { ProjectEditComponent } from "./project-edit/project-edit.component";
 import { ProjectOverviewComponent } from "./project-overview/project-overview.component";
 import { StartComponent } from "./start/start.component";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -28,8 +29,11 @@ import { StartComponent } from "./start/start.component";
     AppRoutingModule,
     NgbModule,
     AppRoutingModule,
-    NgbModule
-  ],
+    NgbModule,
+    RouterModule.forRoot( [
+      {path: "", component:StartComponent}
+      ]),
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
