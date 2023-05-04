@@ -12,9 +12,7 @@
   
   @angular-devkit/core         15.2.7
   
-  @angular-devkit/schematics   15.2.7 
-  
-  @schematics/angular          15.2.7 
+  @ng-bootstrap/ng-bootstrap": 14.1.1
 
 ### Project Setup
 
@@ -22,4 +20,4 @@
   
   install Node.js
   
-  run 'npm install' to fetch resolve dependencies
+  run 'npm install' to install missing dependencies
