@@ -31,7 +31,10 @@ import {RouterModule} from "@angular/router";
     AppRoutingModule,
     NgbModule,
     RouterModule.forRoot( [
-      {path: "", component:StartComponent}
+      {path: "", component:StartComponent},
+      {path: "start", component:StartComponent},
+      {path: "login", component:LoginComponent},
+      {path: "project", component:ProjectComponent}
       ]),
     ],
   providers: [],
