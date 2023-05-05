@@ -1,12 +1,9 @@
 footer {
-    width: 200px;
-    height: 100px;
-    /* as the half of the width */
-    background-color: gold;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    background-color: #0e79c1;
     border-top-left-radius: 110px;
-    /* 100px of height + 10px of border */
     border-top-right-radius: 110px;
-    /* 100px of height + 10px of border */
-    border: 10px solid gray;
     border-bottom: 0;
 }
