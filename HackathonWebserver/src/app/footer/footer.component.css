@@ -1,28 +1,12 @@
-.footer {
-    box-shadow: 0px 0px 10px rgb(39, 32, 32);
-    background-color: rgba(28, 28, 28, 0.8);
-    color: rgb(254, 242, 242);
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    width: auto;
-    margin-top: 20px;
-    position: sticky;
-}
-
-.footer p a {
-    text-decoration: none;
-    color: rgb(254, 242, 242);
-}
-
-.textstyle2 {
-    margin-top: 60px;
-}
-
-.logo {
-    height: 60px;
-    margin-top: 12px;
-    margin-left: -550px;
-    margin-right: 350px;
-    transform: scale(0.7);
+footer {
+    width: 200px;
+    height: 100px;
+    /* as the half of the width */
+    background-color: gold;
+    border-top-left-radius: 110px;
+    /* 100px of height + 10px of border */
+    border-top-right-radius: 110px;
+    /* 100px of height + 10px of border */
+    border: 10px solid gray;
+    border-bottom: 0;
 }
