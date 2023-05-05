@@ -1,0 +1,9 @@
+footer {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    background-color: #0e79c1;
+    border-top-left-radius: 380px;
+    border-top-right-radius: 380px;
+    border-bottom: 0;
+}
