@@ -1,9 +1,13 @@
-footer {
-    margin: 0px;
-    padding: 0px;
-    height: 100%;
+div {
+    margin: 1rem auto;
     background-color: #0e79c1;
-    border-top-left-radius: 110px;
-    border-top-right-radius: 110px;
-    border-bottom: 0;
-}
+  }
+  
+  .textstyle2 {
+    width: 90rem;
+    height: 45rem;
+    background-color: #0e79c1;
+    border-radius: 90rem 90rem 0 0;
+  }
+  
+  
