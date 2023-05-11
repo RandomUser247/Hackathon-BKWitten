@@ -4,46 +4,32 @@ a {
   text-decoration: none;
 }
 
+.main-container {
+  position: relative;
+}
+
+.container-grid {
+  position: absolute;
+  margin: 20% 20%;
+
+}
+
 .circle {
-
-  align-items: center;
-  justify-content: center;
-
   width: 100%;
-  height: 15%;
   background-color: #0e79c1;
   border-radius: 90rem 90rem 0 0;
   padding-top: 40%;
 }
 
-.img {
+.nav-link {
+
   align-items: center;
   justify-content: center;
   flex-direction: row;
-}
-
-.grid {
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  background-color: pink;
-
-}
-
-.bild {
-  margin-bottom: 100%;
-  margin-left: 50%;
 }
 
 .container {
+  justify-content: center;
+  flex-direction: row;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-}
-
-.nav-link {
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
 }
