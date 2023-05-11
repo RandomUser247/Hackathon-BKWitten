@@ -17,11 +17,15 @@
     color: #fec400
 }
 
-.navbar {}
+.navbar {
+    align-items: center;
+    justify-content: center;
+}
 
 .main-container {
     height: 4rem;
     margin-top: 2rem;
+
 }
 
 .nav-link {
