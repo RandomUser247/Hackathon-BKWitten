@@ -1,22 +1,37 @@
 <footer class="footer">
+    <div class="main-container">
+        <div class="bild">
+            <img src="assets\img\LogoZukunft.png">
+        </div>
+        <div class="textstyle2">
 
-    <div class="bild">
-        <img src="assets\img\LogoZukunft.png">
-    </div>        
 
+            <p class="textstyle" style="text-align:center">
+                <a onclick="alert('clicked')" [routerLink]="['Sponsoren']">Impressum</a>・
+                <a [routerLink]="['Copyright Link']">Kontakt</a>・
+                <a [routerLink]="['Impressum']">AGB</a>・
+                <a [routerLink]="['Kontakt']">Über uns</a>・
+            </p>
 
-    <div class="textstyle2">
+            <br>
 
-        
-        <p class="textstyle" style="text-align:center">
-            <a onclick="alert('clicked')" [routerLink]="['Sponsoren']">Impressum</a>・
-            <a [routerLink]="['Copyright Link']">Kontakt</a>・
-            <a [routerLink]="['Impressum']">AGB</a>・
-            <a [routerLink]="['Kontakt']">Über uns</a>・
-        </p>
+        </div>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
+            <div class="container-fluid">
 
-        <br>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav text-dark">
+                        <div class="Impressum">
+                            <a class="nav-link text-dark fs-4 me-5" href="#">Impressum</a>
+                            <a class="nav-link text-dark fs-4 me-5" href="#">Kontakt</a>
+                        </div>
+
+                        <a class="nav-link text-dark fs-4 me-5" href="#">AGB</a>
+                        <a class="nav-link text-dark fs-4 me-5" href="#">Schulwebsite</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
     </div>
-
 </footer>
