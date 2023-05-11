@@ -5,20 +5,34 @@ a {
 }
 
 .circle {
-  display: flex;
+
   align-items: center;
   justify-content: center;
 
   width: 100%;
-  height: 30rem;
+  height: 15%;
   background-color: #0e79c1;
   border-radius: 90rem 90rem 0 0;
   padding-top: 40%;
 }
 
+.img {
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.grid {
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  background-color: pink;
+
+}
+
 .bild {
-  margin-bottom: -400px;
-  margin-left: 270px;
+  margin-bottom: 100%;
+  margin-left: 50%;
 }
 
 .container {
