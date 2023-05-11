@@ -23,36 +23,34 @@ a {
 }
 
 .nav-link {
-
+  display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: row;
-
 }
 
 .container {
   justify-content: center;
   flex-direction: row;
   display: flex;
-
+  padding-bottom: 2rem;
 }
 
 .nav-link:nth-child(1):hover {
   color: #f9b42f;
-  border-bottom: 2px solid #000000;
+  border-bottom: 2px solid #ffffff;
 }
 
 .nav-link:nth-child(2):hover {
   color: #e34634;
-  border-bottom: 2px solid #000000;
+  border-bottom: 2px solid #ffffff;
 }
 
 .nav-link:nth-child(3):hover {
   color: #ffffff;
-  border-bottom: 2px solid #000000;
+  border-bottom: 2px solid #ffffff;
 }
 
 .nav-link:nth-child(4):hover {
   color: #308b4d;
-  border-bottom: 2px solid #000000;
+  border-bottom: 2px solid #ffffff;
 }
