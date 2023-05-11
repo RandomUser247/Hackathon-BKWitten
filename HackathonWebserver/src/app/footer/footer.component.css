@@ -19,5 +19,7 @@ a {
 
 .navbar {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
 }
