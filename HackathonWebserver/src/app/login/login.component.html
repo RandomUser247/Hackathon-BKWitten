@@ -1,1 +1,25 @@
-<p>login works!</p>
+<div class="container-fluid">
+    <app-navbar></app-navbar>
+</div>
+
+<body class="text-center">
+
+<main class="form-signin w-100 m-auto">
+  <form>
+    <img class="mb-4" src="assets/Images/logo-bkwitten4.png">
+    <h1 class="h3 mb-3 fw-normal">Anmeldung</h1>
+
+    <div class="form-floating">
+      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+      <label for="floatingInput">Benutzername</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <label for="floatingPassword">Password</label>
+    </div>
+    <button [routerLink]="['/start']" class="w-100 btn btn-lg btn-primary mt-4" type="submit">Sign in</button>
+    <div class="m-3">Password vergessen</div>
+  </form>
+</main>
+
+</body>
