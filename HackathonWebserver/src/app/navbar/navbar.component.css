@@ -4,9 +4,11 @@
     flex-direction: row;
     height: 1fr;
     width: 100%;
+    background-color: #e34634;
 }
 
-.navbar {}
+.navbar {
+}
 
 .navbar .navbar-nav .active>.nav-link,
 .navbar .navbar-nav .nav-link.active,
@@ -17,7 +19,7 @@
     color: #fec400
 }
 
-.navbar {}
+
 
 .main-container {
     height: 4rem;
