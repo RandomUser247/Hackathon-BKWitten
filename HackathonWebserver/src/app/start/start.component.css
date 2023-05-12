@@ -46,3 +46,22 @@
   margin: 0;
   line-height: 1.2;
 }
+
+.dot{
+  border-radius:50%;
+  float:left;
+  shape-outside: circle(50% at 50% 50%) border-box; 
+  shape-margin: 1em; 
+  margin:1.5em; 
+  width: 12em; 
+  height: 12em;
+}
+.dot-right{
+  border-radius:50%;
+  float:right;
+  shape-outside: circle(50% at 50% 50%) border-box; 
+  shape-margin: 1em; 
+  margin:1.5em; 
+  width: 12em; 
+  height: 12em;
+}
