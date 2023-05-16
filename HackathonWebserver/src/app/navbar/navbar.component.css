@@ -25,6 +25,7 @@
 .main-container {
     height: 4rem;
     margin-top: 2rem;
+  background-color: white;
 }
 
 .nav-link {
