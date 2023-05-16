@@ -35,7 +35,8 @@ import { RouterModule } from "@angular/router";
       { path: "", component: StartComponent },
       { path: "start", component: StartComponent },
       { path: "login", component: LoginComponent },
-      { path: "project", component: ProjectComponent }
+      { path: "project", component: ProjectComponent },
+      { path: "overview", component: ProjectOverviewComponent}
     ]),
   ],
   providers: [],
