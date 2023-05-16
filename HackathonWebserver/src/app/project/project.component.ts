@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent {
-
+  images = ["assets/Images/bkwitten-front.jpg","assets/Images/bkwitten-front.jpg","assets/Images/bkwitten-front.jpg","assets/Images/bkwitten-front.jpg"]
 }
