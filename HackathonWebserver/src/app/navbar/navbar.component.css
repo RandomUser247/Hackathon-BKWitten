@@ -25,9 +25,15 @@
 }
 
 .main-container {
+<<<<<<< HEAD
     height: 100%;
     margin-top: 0.5rem;
 
+=======
+    height: 4rem;
+    margin-top: 2rem;
+  background-color: white;
+>>>>>>> 9a7537213e38a09c881700b4aeb82110a41cd1b3
 }
 
 .nav-link {
