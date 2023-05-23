@@ -5,7 +5,7 @@
     height: 100%;
     width: 100%;
     gap: 4.5%;
-    background-color: #e34634;
+    background-color: white;
 }
 
 .logo {
@@ -37,38 +37,38 @@
     height: 3rem;
     text-align: center;
 
-    border: 2px solid white;
+    border: 1px solid white;
 }
 
 .nav-link:nth-child(1):hover {
     background-color: #f9b42f;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
 
 .nav-link:nth-child(2):hover {
     background-color: #e34634;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
 
 .nav-link:nth-child(3):hover {
     background-color: #0e79c1;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
 
 .nav-link:nth-child(4):hover {
     background-color: #308b4d;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
 
 .nav-link:nth-child(5) {
 
-    background-color: #afc6b799;
-    border: 2px solid #000000;
+    background-color: rgba(222, 222, 222, 0.86);
+    border: 1px solid #000000;
 }
 
 .nav-link:nth-child(5):hover {
     background-color: #ffffff99;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
 
 .btn {
@@ -76,10 +76,11 @@
     height: 50%;
     align-items: center;
     justify-content: center;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
 
 .btn:hover {
     background-color: rgb(233, 230, 230);
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
+
