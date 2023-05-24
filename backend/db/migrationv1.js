@@ -10,3 +10,4 @@ db.serialize(() => {
     db.close((e) => {console.log(e ? console.log(e) :"Database successfully closed");});
 });
 
+// TODO add table constraints (foreign keys)

@@ -20,28 +20,67 @@ app.get('/api/', function(req, res) {
 
 // /user endpoint
 app.get('/api/user', function(req, res) {
-    res.send('API for the backend');
+    // authenticate request
+
+    // get Data from Database
+
+    // send data
+    res.send('Some user Data');
 });
 
-// /auth/login endpoint for posting login data to
-app.post('/api/auth/login', function(req, res){
+// /auth endpoint for posting login data to
+app.post('/api/auth', function(req, res){
+    // check session if already logged in
 
+    // validate password
+
+    // establish session
+    res.send("success");
 });
+
+// delete session (equals logout)
+app.delete('/api/auth', function(req, res){
+    
+})
+
+// for new password
+app.post('/api/auth', function(req, res) {
+    // check session
+
+    // authentificate by current password
+
+    // validate new password
+    
+    // update new password
+})
+
 
 // project endpoint
 // get sends back project data responding to id
-app.get("/api/project", function(req, res){
+app.get("/api/project/:id", function(req, res){
+    // check if id is valid
+    
+    // get project data
 
+    // send project data
 });
 
 // POST project updates data in project
-app.post("/api/project", function(req, res){
+app.post("/api/project/:id", function(req, res){
+    // check if id is valid
 
+    // validate request data
+
+    // insert data to project table row
+
+    // respond success
 });
 
 // /overview endpoint, sends back all project data in a list
 app.get("/api/overview", function(req, res){
+    // get all project as list
 
+    // respond with all projects
 })
 
 // server instance ######################################################
@@ -96,3 +135,17 @@ function validatepass(password, hash){
         return false;
     })
 }
+
+/*
+# simple express #
+const express = require('express');
+const app = express();
+const port = process.env.PORT || port;
+const www = process.env.WWW || './';
+app.use(express.static(www));
+console.log(`serving ${www}`);
+app.get('*', (req, res) => {
+    res.sendFile(`index.html`, { root: www });
+});
+app.listen(port, () => console.log(`listening on http://localhost:${port}`));
+*/
