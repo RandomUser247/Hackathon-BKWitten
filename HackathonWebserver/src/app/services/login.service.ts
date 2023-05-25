@@ -9,19 +9,20 @@ import { User } from '../interfaces/user';
 export class LoginServiceService {
 
   constructor(private http: HttpClient) { }
+  //user: BehaviorSubject<User> = new BehaviorSubject({} as User);
 
-  user: BehaviorSubject<User> = new BehaviorSubject({} as User);
-
+  setToken(token: string): void {
+    return localStorage.setItem('token', token);
+  }
   logout() {
     localStorage.removeItem('token');
   }
-  getActiveUser(): Observable<User> {
-    return this.user;
+  getActiveUser() {
+
   }
-  loginUser(name: string, email: string, password: string): Observable<User> {
+  loginUser(email: string, password: string): Observable<User> {
     return this.http.post<User>('http://localhost:8080/benutzer/login',
       {
-        "benutzername": name,
         "email": email,
         "password": password
       });

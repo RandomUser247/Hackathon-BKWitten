@@ -12,8 +12,9 @@ import { ProjectEditComponent } from "./project-edit/project-edit.component";
 import { ProjectOverviewComponent } from "./project-overview/project-overview.component";
 import { StartComponent } from "./start/start.component";
 import { RouterModule } from "@angular/router";
-
-
+import { AuthguardService } from './services/authguard.service';
+import { FormsModule } from '@angular/forms';
+import { AuthGuard } from './services/authentication.guard';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,17 +30,17 @@ import { RouterModule } from "@angular/router";
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    AppRoutingModule,
-    NgbModule,
+    FormsModule,
     RouterModule.forRoot([
-      { path: "", component: StartComponent },
-      { path: "start", component: StartComponent },
-      { path: "login", component: LoginComponent },
-      { path: "project", component: ProjectComponent },
-      { path: "overview", component: ProjectOverviewComponent }
+      { path: "", component: StartComponent, canActivate: [AuthGuard] },
+      { path: "start", component: StartComponent, canActivate: [AuthGuard] },
+      { path: "login", component: LoginComponent, canActivate: [AuthGuard] },
+      { path: "project", component: ProjectComponent, canActivate: [AuthGuard] },
+      { path: "overview", component: ProjectOverviewComponent, canActivate: [AuthGuard] }
     ]),
   ],
-  providers: [],
+  providers: [AuthguardService],
   bootstrap: [AppComponent]
+
 })
 export class AppModule { }

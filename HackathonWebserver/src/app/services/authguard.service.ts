@@ -3,7 +3,11 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuardServiceService {
+export class AuthguardService {
 
   constructor() { }
+
+  public isLoggedIn() {
+    return !!localStorage.getItem('token');
+  }
 }
