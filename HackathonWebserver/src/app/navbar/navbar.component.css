@@ -5,7 +5,7 @@
     height: 100%;
     width: 100%;
     gap: 4.5%;
-    background-color: #e34634;
+    background-color: #fdfcfc;
 }
 
 .logo {
@@ -25,18 +25,17 @@
 }
 
 .main-container {
-
     height: 100%;
     margin-top: 0.5rem;
-
-
 }
 
 .nav-link {
     border-radius: 10%;
     height: 3rem;
     text-align: center;
-
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: normal;
     border: 2px solid white;
 }
 
