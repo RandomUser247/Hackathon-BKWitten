@@ -10,7 +10,12 @@ const bcrypt = require('bcrypt');
 
 var express = require('express');
 var app = express();
-
+var session = require("express-session")
+app.use(session({
+    resave: false, // don't save session if unmodified
+    saveUninitialized: false, // don't create session until something stored
+    secret: 'shhhh, very secret'
+}))
 // ressource definitions ####################################################
 
 // call to api root
@@ -50,7 +55,7 @@ app.post('/api/auth', function(req, res) {
     // authentificate by current password
 
     // validate new password
-    
+
     // update new password
 })
 
@@ -59,10 +64,21 @@ app.post('/api/auth', function(req, res) {
 // get sends back project data responding to id
 app.get("/api/project/:id", function(req, res){
     // check if id is valid
-    
-    // get project data
+    var _id = parseInt(req.params.id);
+    if (_id == NaN || _id < 0){
+        res.status(404).send("BAD REQUEST");
+        return;
+    }
 
+    // get project data
+    const stmt = db.prepare("SELECT * FROM projects WHERE ID=(?)");
+    stmt.finalize(req.params.id);
+    project = stmt.run();
+    if(project == null){
+        res.status(404).send("project not found")
+    }
     // send project data
+    res.status(200).send(project)
 });
 
 // POST project updates data in project
@@ -79,8 +95,9 @@ app.post("/api/project/:id", function(req, res){
 // /overview endpoint, sends back all project data in a list
 app.get("/api/overview", function(req, res){
     // get all project as list
-
+    const stmt = db.prepare("SELECT * from projects");
     // respond with all projects
+    res.send(stmt.run());
 })
 
 // server instance ######################################################
