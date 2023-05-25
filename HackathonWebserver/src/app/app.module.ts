@@ -12,6 +12,7 @@ import { ProjectEditComponent } from "./project-edit/project-edit.component";
 import { ProjectOverviewComponent } from "./project-overview/project-overview.component";
 import { StartComponent } from "./start/start.component";
 import { RouterModule } from "@angular/router";
+import { ArchiveComponent } from './archive/archive.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { RouterModule } from "@angular/router";
     ProjectComponent,
     ProjectEditComponent,
     ProjectOverviewComponent,
-    StartComponent
+    StartComponent,
+    ArchiveComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ import { RouterModule } from "@angular/router";
       { path: "start", component: StartComponent },
       { path: "login", component: LoginComponent },
       { path: "project", component: ProjectComponent },
-      { path: "overview", component: ProjectOverviewComponent}
+      { path: "overview", component: ProjectOverviewComponent},
+      { path: "archive", component: ArchiveComponent}
     ]),
   ],
   providers: [],
