@@ -10,19 +10,28 @@
     </div>
   </section>
 
+  <div class="">
+    <form class="d-flex mb-2" role="search">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
+
   <div class="album py-5 bg-light">
     <div class="container">
 
-      <div class="row row-cols-2 gap-2">
+      <div class="row row-cols-2 gap-3 d-flex justify-content-center">
 
         <!-- all available projects -->
-        <div *ngFor="let item of projects" class="col card shadow-sm p-1">
+        <div *ngFor="let item of projects" class="col card shadow-sm p-1" style="width: 21rem;">
           
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
 
             <div class="card-body">
+              <h5 class="card-title">Title</h5>
               <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
               <div class="d-flex justify-content-between align-items-center">
+              <a href="/project" class="stretched-link"></a>
                 
                 <small class="text-muted">9 mins</small>
               </div>
