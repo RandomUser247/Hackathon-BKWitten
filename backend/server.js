@@ -10,12 +10,21 @@ const bcrypt = require('bcrypt');
 
 var express = require('express');
 var app = express();
-var session = require("express-session")
+
+app.use(express.json);
+var session = require("express-session");
 app.use(session({
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
     secret: 'shhhh, very secret'
-}))
+}));
+
+app.use(bodyParser.json({
+    type: function() {
+        return true;
+    }
+}));
+
 // ressource definitions ####################################################
 
 // call to api root
@@ -37,6 +46,10 @@ app.get('/api/user', function(req, res) {
 app.post('/api/auth', function(req, res){
     // check session if already logged in
 
+    // validate body
+    if (!req.accepts("application/json")){
+        res.status(406).send()
+    }
     // validate password
 
     // establish session
@@ -63,7 +76,7 @@ app.post('/api/auth', function(req, res) {
 // project endpoint
 // get sends back project data responding to id
 app.get("/api/project/:id", function(req, res){
-    // check if id is valid
+    // validate parameter
     var _id = parseInt(req.params.id);
     if (_id == NaN || _id < 0){
         res.status(404).send("BAD REQUEST");
@@ -71,9 +84,7 @@ app.get("/api/project/:id", function(req, res){
     }
 
     // get project data
-    const stmt = db.prepare("SELECT * FROM projects WHERE ID=(?)");
-    stmt.finalize(req.params.id);
-    project = stmt.run();
+    var project = getProject(_id)
     if(project == null){
         res.status(404).send("project not found")
     }
@@ -83,13 +94,18 @@ app.get("/api/project/:id", function(req, res){
 
 // POST project updates data in project
 app.post("/api/project/:id", function(req, res){
-    // check if id is valid
-
-    // validate request data
-
+    // validate id
+    var _id = parseInt(req.params.id);
+    if (_id == NaN || _id < 0){
+        res.status(404).send("BAD REQUEST");
+        return;
+    }
+    // validate body data
+    var params = req.body;
+    
     // insert data to project table row
 
-    // respond success
+    // send sucess response
 });
 
 // /overview endpoint, sends back all project data in a list
@@ -116,7 +132,10 @@ function postLogin(password, email){
 
 // try to get project by id and return project object
 function getProject(projectid){
-
+    const stmt = db.prepare("SELECT * FROM projects WHERE ID=(?)");
+    stmt.finalize(projectid);
+    var project = stmt.get();
+    return project;
 }
 
 // return all stored projects
