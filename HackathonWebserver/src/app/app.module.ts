@@ -36,13 +36,13 @@ import { AuthguardGuard } from './shared/authguard.guard';
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot([
-      { path: "", component: StartComponent, canActivate: [AuthguardGuard] },
-      { path: "start", component: StartComponent, canActivate: [AuthguardGuard] },
-      { path: "login", component: LoginComponent, canActivate: [AuthguardGuard] },
+      { path: "", component: StartComponent },
+      { path: "start", component: StartComponent },
+      { path: "login", component: LoginComponent },
       { path: "project", component: ProjectComponent, canActivate: [AuthguardGuard] },
       { path: "edit", component: ProjectEditComponent, canActivate: [AuthguardGuard] },
-      { path: "overview", component: ProjectOverviewComponent, canActivate: [AuthguardGuard] },
-      { path: "archive", component: ArchiveComponent, canActivate: [AuthguardGuard] }
+      { path: "overview", component: ProjectOverviewComponent },
+      { path: "archive", component: ArchiveComponent }
     ]),
   ],
   providers: [],
