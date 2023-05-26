@@ -2,43 +2,45 @@
 
 <main class="d-flex justify-content-center">
     <div class="content card vh-100 w-75">
-    <div class="px-4 py-5 my-5 text-center" style="background-image: url(assets/Images/banner.jpg);">
-        <h1 class="display-5 fw-bold text-white-50">Project Name</h1>
+        <div class="px-4 py-5 my-5 text-center" style="background-image: url(assets/Images/banner.jpg);">
+            <h1 class="display-5 fw-bold text-white-50">Project Name</h1>
+        </div>
+        <div class="card justify-content-center text-center w-75">
+            <p>Lorem ipsum do
+                lor sit amet consectetur adipisicing elit. Dolorem laborum nisi nostrum repellat explicabo quas. Quos
+                molestiae aliquam quas dolorum, molestias obcaecati animi accusamus dolores nulla? Beatae perspiciatis
+                voluptatem ducimus!</p>
+        </div>
+        <div class="d-flex justify-content-center h-75">
+            <ngb-carousel *ngIf="images">
+                <ng-template ngbSlide>
+                    <div class="picsum-img-wrapper">
+                        <img [src]="images[0]" alt="Random first slide" />
+                    </div>
+                    <div class="carousel-caption">
+                        <h3>First slide label</h3>
+                        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                    </div>
+                </ng-template>
+                <ng-template ngbSlide>
+                    <div class="picsum-img-wrapper">
+                        <img [src]="images[1]" alt="Random second slide" />
+                    </div>
+                    <div class="carousel-caption">
+                        <h3>Second slide label</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                </ng-template>
+                <ng-template ngbSlide>
+                    <div class="picsum-img-wrapper">
+                        <img [src]="images[2]" alt="Random third slide" />
+                    </div>
+                    <div class="carousel-caption">
+                        <h3>Third slide label</h3>
+                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                    </div>
+                </ng-template>
+            </ngb-carousel>
+        </div>
     </div>
-    <div class="card justify-content-center text-center w-75">
-        <p>Lorem ipsum do
-            lor sit amet consectetur adipisicing elit. Dolorem laborum nisi nostrum repellat explicabo quas. Quos molestiae aliquam quas dolorum, molestias obcaecati animi accusamus dolores nulla? Beatae perspiciatis voluptatem ducimus!</p>
-    </div>
-    <div class="d-flex justify-content-center h-75">
-    <ngb-carousel *ngIf="images">
-        <ng-template ngbSlide>
-            <div class="picsum-img-wrapper">
-                <img [src]="images[0]" alt="Random first slide" />
-            </div>
-            <div class="carousel-caption">
-                <h3>First slide label</h3>
-                <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-            </div>
-        </ng-template>
-        <ng-template ngbSlide>
-            <div class="picsum-img-wrapper">
-                <img [src]="images[1]" alt="Random second slide" />
-            </div>
-            <div class="carousel-caption">
-                <h3>Second slide label</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-        </ng-template>
-        <ng-template ngbSlide>
-            <div class="picsum-img-wrapper">
-                <img [src]="images[2]" alt="Random third slide" />
-            </div>
-            <div class="carousel-caption">
-                <h3>Third slide label</h3>
-                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-            </div>
-        </ng-template>
-    </ngb-carousel>
-    </div>
-</div>
 </main>
