@@ -1,1 +1,28 @@
-<p>archive works!</p>
+<!-- header -->
+<div class="container-fluid">
+  <app-navbar></app-navbar>
+</div>
+
+<main style="margin-top: -49px">
+  <div class="container-fluid" style="height: 100vh"> <!-- ./container-fluid -->
+    <div class="content card"> <!-- ./content -->
+
+  <ul>
+      <li *ngFor="let stream of STREAMS">
+        <p>Stream Tag {{stream.id}}</p>
+        <div class="d-flex embed-responsive embed-responsive-16by9 justify-content-center ratio ratio-16x9">
+          <iframe allowfullscreen class="embed-responsive-item" src="{{stream.url}}"></iframe>
+        </div>
+      </li>
+  </ul>
+
+      <!-- footer -->
+      <div>
+        <app-footer></app-footer>
+      </div>
+
+    </div> <!-- ./content -->
+  </div> <!-- ./container-fluid -->
+
+
+</main>
