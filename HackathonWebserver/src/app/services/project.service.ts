@@ -14,7 +14,6 @@ export class ProjectService {
   user: User;
   editModeOn: boolean = false;
   project: Projects;
-  //Dieses NgOnInit muss später in die overview Komponente, damit diese beim Start der Komponente geladen werden
 
   //Alle Projekte aus der Datenbank lesen
   readAllProjectsFromDatabase(): Observable<Projects> {
