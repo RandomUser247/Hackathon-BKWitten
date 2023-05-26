@@ -9,7 +9,7 @@ import { ProjectService } from '../services/project.service';
 export class ProjectOverviewComponent {
   constructor(private projectService: ProjectService) { }
   ngOnInit(): void {
-    // this.projectService.readProjectsFromDatabase();
+    // this.projectService.readAllProjectsFromDatabase();
   }
   projects = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 }
