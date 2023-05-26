@@ -8,8 +8,8 @@ import { UserloginService } from '../services/userlogin.service';
 export class LoginComponent {
   constructor(private loginService: UserloginService) { }
 
-  email: any;
-  password: any;
+  email: string;
+  password: string;
 
   validateUserLogin() {
     this.loginService.loginUser(this.email, this.password).subscribe({

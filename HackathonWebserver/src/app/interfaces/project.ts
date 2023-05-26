@@ -1,5 +1,5 @@
-export interface Project {
-    id: number,
+export interface Projects {
+    projectid: number,
     projecttitle: string,
     projectdecription: string,
     projectimage: string,
