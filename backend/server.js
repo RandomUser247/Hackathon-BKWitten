@@ -102,9 +102,18 @@ app.post("/api/project/:id", function(req, res){
     }
     // validate body data
     var params = req.body;
-    
-    // insert data to project table row
+    var paramlist = [];
+    var err = "";
+    if(params.title){
+        if(params.title.trim().length < 5){
+            err += "you need a title at least 5 characters long \n"
+            res.status(406).send(err);
+            
+        }
 
+    }
+    // insert data to project table row
+    const stmt = db.prepare("UPSERT ")
     // send sucess response
 });
 
@@ -140,12 +149,13 @@ function getProject(projectid){
 
 // return all stored projects
 function getProjects(){
-
+    var projects = db.all("SELECT * FROM project");
+    return projects;
 }
 
 // Insert updated projectdata in database and return success
 function updateProject(projectid, project){
-
+    const stmt = db.prepare("INSERT INTO projects ")
 }
 
 
