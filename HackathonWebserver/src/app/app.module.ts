@@ -15,6 +15,7 @@ import { ArchiveComponent } from './archive/archive.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthguardGuard } from './shared/authguard.guard';
+import { SponsorComponent } from './sponsor/sponsor.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +26,8 @@ import { AuthguardGuard } from './shared/authguard.guard';
     ProjectEditComponent,
     ProjectOverviewComponent,
     StartComponent,
-    ArchiveComponent
+    ArchiveComponent,
+    SponsorComponent
   ],
   imports: [
     BrowserModule,
