@@ -44,7 +44,8 @@ import { SponsorComponent } from './sponsor/sponsor.component';
       { path: "project", component: ProjectComponent, canActivate: [AuthguardGuard] },
       { path: "edit", component: ProjectEditComponent, canActivate: [AuthguardGuard] },
       { path: "overview", component: ProjectOverviewComponent },
-      { path: "archive", component: ArchiveComponent }
+      { path: "archive", component: ArchiveComponent },
+      { path: "sponsor", component: SponsorComponent }
     ]),
   ],
   providers: [],
