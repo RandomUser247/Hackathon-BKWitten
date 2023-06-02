@@ -72,11 +72,8 @@
 }
 
 .btn {
-    background-color: rgb(214, 214, 214);
-    height: 50%;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #000000;
+    background-color: rgb(190, 190, 190);
+    border: 1px solid #ffffff;
 }
 
 .btn:hover {
