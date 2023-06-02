@@ -1,22 +1,20 @@
 @media screen and (min-width: 800px) {
-  a {
+  button {
     font-size: 1.5em;
   }
 }
 
 @media screen and (max-width: 800px) {
-  a {
+  button {
     font-size: 1em;
   }
 }
 
-a {
+button {
   color: white;
   background-color: transparent;
   text-decoration: none;
-  padding-right: 3%;
-  padding-left: 3%;
-
+  transform: scale(0.9);
 }
 
 .main-container {
@@ -49,4 +47,20 @@ a {
   flex-direction: row;
   display: flex;
   word-wrap: break-word;
+}
+
+.modal-body {
+  color: black;
+}
+
+.modal-header {
+  color: black;
+}
+
+.modal-footer {
+  color: black;
+}
+
+.btn-danger {
+  color: black;
 }
