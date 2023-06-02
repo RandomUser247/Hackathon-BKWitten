@@ -15,10 +15,6 @@ export class ArchiveComponent {
   STREAMS = [
 
     {id: 1, url: this.getSanitized('https://www.youtube.com/embed/dQw4w9WgXcQ')},
-    {id: 2, url: this.getSanitized('https://www.youtube.com/embed/dQw4w9WgXcQ')},
-    {id: 5, url: this.getSanitized('https://www.youtube.com/embed/dQw4w9WgXcQ')},
-    {id: 3, url: this.getSanitized('https://www.youtube.com/embed/dQw4w9WgXcQ')},
-    {id: 4, url: this.getSanitized('https://www.youtube.com/embed/dQw4w9WgXcQ')}
 
   ]
 
