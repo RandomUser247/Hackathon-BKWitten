@@ -1,0 +1,19 @@
+{
+  "name": "restserver",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon app.js",
+    "initdb": "node ./bin/db/migrationv1.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "^4.18.2",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.22",
+    "sqlite3": "^5.1.6"
+  }
+}
