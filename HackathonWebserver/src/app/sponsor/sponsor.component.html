@@ -7,14 +7,17 @@
   <div class="container-fluid" style="height: 100vh"> <!-- ./container-fluid -->
     <div class="content card border-light"> <!-- ./content -->
 
+      <h1 style="align-self: center; padding-top: 5vh">Sponsoren</h1>
       <ul>
         <div *ngFor="let sponsor of SPONSORS">
-
+          <img src="assets/Images/logo-bkwitten4.png" style="padding-top: 5vh">
+          <h3>{{sponsor.titel}}</h3>
+          <div>{{sponsor.text}}</div>
         </div>
       </ul>
 
       <!-- footer -->
-      <div>
+      <div style="padding-top: 5vh">
         <app-footer></app-footer>
       </div>
 
