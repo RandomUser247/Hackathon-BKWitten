@@ -1,96 +1,110 @@
 <div class="footer">
-    <div class="main-container">
-        <div class="container-grid">
-            <div class="row">
-                <div class="col">
-                    <img src="assets\img\LogoZukunftNeu.png" width="100%" height="100%">
-                </div>
-                <div class="col-6">
-                    <img src="assets\img\LogoZukunftNeu.png" width="100%" height="100%">
-                </div>
-                <div class="col">
-                    <img src="assets\img\LogoZukunftNeu.png" width="100%" height="100%">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <img src="assets\img\LogoZukunftNeu.png" width="100%" height="100%">
-                </div>
-                <div class="col-5">
-                    <img src="assets\img\LogoZukunftNeu.png" width="100%" height="100%">
-                </div>
-                <div class="col">
-                    <img src="assets\img\LogoZukunftNeu.png" width="100%" height="100%">
-                </div>
-            </div>
+  <div class="main-container">
+    <div class="container-grid">
+      <div class="row">
+        <div class="col">
+          <img height="100%" src="assets\img\LogoZukunftNeu.png" width="100%">
         </div>
-        <div class="circle">
-            <div class="links">
-                <button style="margin: 50px; padding: 10px" type="button" class="btn btn-primary"
-                    (click)="openPopup()">Impressum
-                </button>
-                <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Impressum</h4>
-                            </div>
-                            <div class="modal-body">
-                                <p>hier steht unser Impressum</p>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" (click)="closePopup()">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button style="margin: 50px; padding: 10px" type="button" class="btn btn-primary"
-                    (click)="openPopup()">Kontakte
-                </button>
-                <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Kontakte</h4>
-                            </div>
-                            <div class="modal-body">
-                                <p>hier stehen unsere Kontakte!</p>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" (click)="closePopup()">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button style="margin: 50px; padding: 10px" type="button" class="btn btn-primary"
-                    (click)="openPopup()">AGB
-                </button>
-                <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">AGB</h4>
-                            </div>
-                            <div class="modal-body">
-                                <p>hier steht unsere AGB</p>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" (click)="closePopup()">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <a class="nav-link " href="https://www.bkwitten.net/" target="_blank">Schulwebsite</a>
-            </div>
+        <div class="col-6">
+          <img height="100%" src="assets\img\LogoZukunftNeu.png" width="100%">
         </div>
+        <div class="col">
+          <img height="100%" src="assets\img\LogoZukunftNeu.png" width="100%">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <img height="100%" src="assets\img\LogoZukunftNeu.png" width="100%">
+        </div>
+        <div class="col-5">
+          <img height="100%" src="assets\img\LogoZukunftNeu.png" width="100%">
+        </div>
+        <div class="col">
+          <img height="100%" src="assets\img\LogoZukunftNeu.png" width="100%">
+        </div>
+      </div>
     </div>
+    <div class="circle">
+      <div class="links">
+
+        <!-- Button trigger modal -->
+        <button class="btn btn-primary" data-bs-target="#impressum" data-bs-toggle="modal"
+                style="margin: 50px; padding: 10px"
+                type="button">
+          Impressum
+        </button>
+
+        <!-- Modal -->
+        <div aria-hidden="true" aria-labelledby="impressumLabel" class="modal fade" id="impressum" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="impressumLable">Impressum</h1>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+              </div>
+              <div class="modal-body">
+                Hier steht unser Impressum.
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary modal-button" data-bs-dismiss="modal" type="button">Schließen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Button trigger modal -->
+        <button class="btn btn-primary" data-bs-target="#kontakt" data-bs-toggle="modal"
+                style="margin: 50px; padding: 10px"
+                type="button">
+          Kontakt
+        </button>
+
+        <!-- Modal -->
+        <div aria-hidden="true" aria-labelledby="kontaktLabel" class="modal fade" id="kontakt" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="kontaktLabel">Kontakt</h1>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+              </div>
+              <div class="modal-body">
+                Hier findest du unsere Ansprechpartner.
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary modal-button" data-bs-dismiss="modal" type="button">Schließen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Button trigger modal -->
+        <button class="btn btn-primary" data-bs-target="#agbs" data-bs-toggle="modal"
+                style="margin: 50px; padding: 10px"
+                type="button">
+          AGBs
+        </button>
+
+        <!-- Modal -->
+        <div aria-hidden="true" aria-labelledby="agbsLabel" class="modal fade" id="agbs" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="agbsLabel">AGBs</h1>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+              </div>
+              <div class="modal-body">
+                Hier findest du unsere Allgemeinen Geschäftsbedingungen.
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary modal-button" data-bs-dismiss="modal" type="button">Schließen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a class="btn btn-primary" style="margin: 50px; padding: 10px; font-size: medium" href="https://www.bkwitten.net/" target="_blank">Schulwebsite</a>
+
+      </div>
+    </div>
+  </div>
 </div>
