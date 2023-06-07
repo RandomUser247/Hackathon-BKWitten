@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthguardGuard } from './shared/authguard.guard';
 import { SponsorComponent } from './sponsor/sponsor.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +28,8 @@ import { SponsorComponent } from './sponsor/sponsor.component';
     ProjectOverviewComponent,
     StartComponent,
     ArchiveComponent,
-    SponsorComponent
+    SponsorComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +47,9 @@ import { SponsorComponent } from './sponsor/sponsor.component';
       { path: "edit", component: ProjectEditComponent, canActivate: [AuthguardGuard] },
       { path: "overview", component: ProjectOverviewComponent },
       { path: "archive", component: ArchiveComponent },
-      { path: "sponsor", component: SponsorComponent }
+      { path: "sponsor", component: SponsorComponent },
+      { path: "change-password", component: ChangePasswordComponent }
+
     ]),
   ],
   providers: [],
