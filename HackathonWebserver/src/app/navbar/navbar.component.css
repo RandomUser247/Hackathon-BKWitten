@@ -9,10 +9,13 @@
 }
 
 .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2px;
+}
+.navbar-brand {
+  width: 100%;
 }
 
 .navbar .navbar-nav .active>.nav-link,
@@ -59,14 +62,17 @@
     background-color: #308b4d;
     border: 1px solid #000000;
 }
-
-.nav-link:nth-child(5) {
+.nav-link:nth-child(5):hover {
+    background-color: #ea5b0c;
+    border: 1px solid #000000;
+}
+.nav-link:nth-child(6) {
 
     background-color: rgba(222, 222, 222, 0.86);
     border: 1px solid #000000;
 }
 
-.nav-link:nth-child(5):hover {
+.nav-link:nth-child(6):hover {
     background-color: #ffffff99;
     border: 1px solid #000000;
 }
