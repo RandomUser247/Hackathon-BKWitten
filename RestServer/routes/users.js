@@ -1,13 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+
 
 // /user endpoint
-app.get('/api/user', function(req, res) {
+router.get('/', function(req, res) {
   if(!req.body)
   // authenticate request
   if(!req.body.email){
@@ -31,3 +28,10 @@ app.get('/api/user', function(req, res) {
 
 module.exports = router;
 
+
+function createUser(email, password){
+  db.run("INSERT INTO users VALUES (?, ?, ?)",
+  null,
+  email,
+  encrypt(password))
+}

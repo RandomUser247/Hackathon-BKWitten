@@ -5,11 +5,11 @@ var router = express.Router();
 
 // project endpoint
 // get sends back project data responding to id
-app.get("/api/project/:id", function(req, res){
+router.get("/:id", function(req, res){
     // validate parameter
     var _id = parseInt(req.params.id);
     if (_id || _id < 0){
-        res.status(404).send("BAD REQUEST");
+        res.status(404).send("NO SUCH PROJECT");
         return;
     }
 
@@ -23,7 +23,7 @@ app.get("/api/project/:id", function(req, res){
 });
 
 // POST project updates data in project
-app.post("/api/project/:id", function(req, res){
+router.post("/:id", function(req, res){
     // validate id
     var _id = parseInt(req.params.id);
     if (_id == NaN || _id < 0){
@@ -49,7 +49,7 @@ app.post("/api/project/:id", function(req, res){
 });
 
 // /overview endpoint, sends back all project data in a list
-app.get("/api/overview", function(req, res){
+router.get("/", function(req, res){
     // get all project as list
     const stmt = db.prepare("SELECT * from projects");
     // respond with all projects
@@ -58,3 +58,34 @@ app.get("/api/overview", function(req, res){
 
 
 module.exports = router;
+
+
+
+
+// try to get project by id and return project object
+function getProject(projectid){
+    const stmt = db.prepare("SELECT * FROM projects WHERE ID=(?)", projectid);
+    var project = stmt.get();
+    return project;
+}
+
+// return all stored projects
+function getProjects(){
+    var projects = db.all("SELECT * FROM project");
+    return projects;
+}
+
+// Insert updated projectdata in database and return success
+function updateProject(projectid, project){
+    const stmt = db.prepare("UPDATE projects SET \
+    title=$title, description=$description, vidlink=$vidlink, moretext=$moretext, lastedit=$lastedit\
+    WHERE id=$projectid",
+    {
+        title: project.title,
+        description: project.description,
+        vidlink: project.vidlink,
+        moretext: project.moretext,
+        lastedit: new Date().getTime(),
+        projectid: projectid
+    })
+}

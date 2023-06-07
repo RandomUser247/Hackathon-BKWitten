@@ -1,9 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+// default URL
+router.get("/:universalURL", (req, res) =>{
+  res.status(404).send("URL NOT FOUND");
+})
+
+
+// call to api root
+router.get('/api', function(req, res) {
+  console.log("api root called");
+  res.send('API for the backend');
 });
 
 module.exports = router;
