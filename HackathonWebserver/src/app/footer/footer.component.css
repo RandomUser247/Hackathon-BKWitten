@@ -71,6 +71,10 @@ button {
   color: black;
 }
 
-.btn-danger {
+.modal-button {
   color: black;
+  border-color: gray;
+}
+.modal-button:hover {
+  color: white;
 }
