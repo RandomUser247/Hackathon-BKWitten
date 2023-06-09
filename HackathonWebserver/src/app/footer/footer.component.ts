@@ -10,13 +10,4 @@ export class FooterComponent implements OnInit {
   constructor() { }
 
   ngOnInit() { }
-
-  displayStyle = "none";
-
-  openPopup() {
-    this.displayStyle = "block";
-  }
-  closePopup() {
-    this.displayStyle = "none";
-  }
 }
