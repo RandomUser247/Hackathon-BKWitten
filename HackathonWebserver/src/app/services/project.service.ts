@@ -24,8 +24,8 @@ export class ProjectService {
     return this.http.get<Projects>('http://localhost:8080/api/project/' + projectid);
   }
   //Ein bestehendes Projekt updaten oder ein neues hinzufügen
-  updateOrAddProject(project: Projects): Observable<Projects> {
-    return this.http.post<Projects>('http://localhost:8080/api/project/', project); //TODO projectid hinufügen
+  updateOrAddProject(project: Projects, projectid: number): Observable<Projects> {
+    return this.http.post<Projects>('http://localhost:8080/api/project/' + projectid, project);
   }
   //ProjectID aus URL lesen 
   getProjectIDFromURL(): number {
