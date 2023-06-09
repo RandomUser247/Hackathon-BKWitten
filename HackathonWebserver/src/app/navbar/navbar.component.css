@@ -1,6 +1,6 @@
 .main-container {
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
     flex-direction: row;
     height: 100%;
     width: 100%;
@@ -49,7 +49,7 @@
 }
 
 .nav-link:nth-child(2):hover {
-    background-color: #e34634;
+    background-color: #d41500;
     border: 1px solid #000000;
 }
 
@@ -62,18 +62,9 @@
     background-color: #308b4d;
     border: 1px solid #000000;
 }
+
 .nav-link:nth-child(5):hover {
-    background-color: #ea5b0c;
-    border: 1px solid #000000;
-}
-.nav-link:nth-child(6) {
-
-    background-color: rgba(222, 222, 222, 0.86);
-    border: 1px solid #000000;
-}
-
-.nav-link:nth-child(6):hover {
-    background-color: #ffffff99;
+    background-color: #EA5B0C;
     border: 1px solid #000000;
 }
 
