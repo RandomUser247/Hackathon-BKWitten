@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon app.js",
-    "initdb": "node ./bin/db/migrationv1.js"
+    "initdb": "node ./bin/db/migrationv1.js",
+    "createDummy": "node bin/db/createDummy.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

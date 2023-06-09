@@ -1,3 +1,7 @@
+const bcrypt = require("bcrypt");
+const saltround = 10;
+
+
 // basic encrytion
 function encrypt(password){
     bcrypt
@@ -28,3 +32,5 @@ function checklogin(req, res, next){
         res.status(401).send("Unauthorized access");
     }
 }
+
+module.exports = { validatepass, checklogin, encrypt};
