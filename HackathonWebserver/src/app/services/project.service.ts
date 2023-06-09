@@ -17,17 +17,17 @@ export class ProjectService {
 
   //Alle Projekte aus der Datenbank lesen
   readAllProjectsFromDatabase(): Observable<Projects> {
-    return this.http.get<Projects>('http://localhost:8080/projects');
+    return this.http.get<Projects>('http://localhost:8080/api/project');
   }
   //Ein Projekt aus der Datenbank per ID lesen
   readSingleProjectFromDatabase(projectid: number): Observable<Projects> {
-    return this.http.get<Projects>('http://localhost:8080/projects/' + projectid);
+    return this.http.get<Projects>('http://localhost:8080/api/project/' + projectid);
   }
   //Ein bestehendes Projekt updaten oder ein neues hinzufügen
-  updateOrAddProject(project: Projects): Observable<Projects> {
-    return this.http.post<Projects>('http://localhost:8080/projects', project);
+  updateOrAddProject(project: Projects, projectid: number): Observable<Projects> {
+    return this.http.post<Projects>('http://localhost:8080/api/project/' + projectid, project);
   }
-  //ProjectID aus URL lesen
+  //ProjectID aus URL lesen 
   getProjectIDFromURL(): number {
     const stringId = this.route.snapshot.paramMap.get("projectid");
     const id = parseInt(stringId as string)
