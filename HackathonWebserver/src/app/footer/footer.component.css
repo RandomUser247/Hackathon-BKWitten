@@ -33,8 +33,8 @@ a {
 .circle {
   width: 100%;
   background-color: #0e79c1;
-  border-radius: 90rem 90rem 0 0;
-  padding-top: 40%;
+  border-radius: 40rem 40rem 0 0;
+  padding-top: 20%;
   color: white;
 }
 
@@ -77,4 +77,8 @@ button {
 }
 .modal-button:hover {
   color: white;
+}
+
+.link:hover {
+  color: #efeaea;
 }
