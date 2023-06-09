@@ -17,6 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthguardGuard } from './shared/authguard.guard';
 import { SponsorComponent } from './sponsor/sponsor.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { AgbComponent } from './agb/agb.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +30,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
     StartComponent,
     ArchiveComponent,
     SponsorComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    AgbComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +50,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
       { path: "overview", component: ProjectOverviewComponent },
       { path: "archive", component: ArchiveComponent },
       { path: "sponsor", component: SponsorComponent },
-      { path: "change-password", component: ChangePasswordComponent }
+      { path: "change-password", component: ChangePasswordComponent },
+      { path: "agb", component: AgbComponent }
 
     ]),
   ],
