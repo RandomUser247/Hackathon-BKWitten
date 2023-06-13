@@ -9,7 +9,26 @@ var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database("./bin/db/test.db");
 const saltround = 10;
 
-// /auth endpoint for posting login data to
+/**
+ * @swagger
+ * /auth:
+ *   post:
+ *     summary: Authenticates user and logs in.
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginRequest'
+ *     responses:
+ *       200:
+ *         description: Successful login. User is redirected to the home page.
+ *       406:
+ *         description: Wrong credentials provided.
+ *       500:
+ *         description: An error occurred during login.
+ */
 router.post("/", async function (req, res) {
   const { email, password } = req.body;
   // check session if already logged in
@@ -43,7 +62,16 @@ router.post("/", async function (req, res) {
   }
 });
 
-// delete session (equals logout)
+/**
+ * @swagger
+ * /auth:
+ *   delete:
+ *     summary: Logs out the user and destroys the session.
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Logout successful. Session destroyed.
+ */
 router.delete("/", function (req, res) {
   req.session.destroy((err) => {
     if (err) {
@@ -53,7 +81,39 @@ router.delete("/", function (req, res) {
   });
 });
 
-// for new password
+/**
+ * @swagger
+ * /auth:
+ *   put:
+ *     summary: Update user's password.
+ *     tags: [Authentication]
+ *     requestBody:
+ *       description: User's current and new password.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 description: Current password.
+ *               newPassword:
+ *                 type: string
+ *                 description: New password.
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *     responses:
+ *       200:
+ *         description: Password updated successfully.
+ *       400:
+ *         description: Invalid request or new password is too short.
+ *       401:
+ *         description: Unauthorized or invalid current password.
+ *       500:
+ *         description: Internal server error occurred.
+ */
 router.put("/", async function (req, res) {
   // Get the user's current password and new password from the request body
   const { currentPassword, newPassword } = req.body;

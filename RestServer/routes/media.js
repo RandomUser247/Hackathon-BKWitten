@@ -9,7 +9,37 @@ var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database("./bin/db/test.db");
 
 router.use("/", express.static("./public/images"));
+/**
+ * @openapi
+ * basePath: /api
+ */
 
+/**
+ * @swagger
+ * /media/{id}:
+ *   put:
+ *     summary: Uploads an image.
+ *     tags: [Media]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the image.
+ *         schema:
+ *           type: integer
+ *       - in: formData
+ *         name: image
+ *         required: true
+ *         description: The image file to upload.
+ *         type: file
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Image uploaded successfully.
+ *       500:
+ *         description: Failed to upload image or internal server error.
+ */
 router.put(
   "/:id(\\d+)",
   isOwner,
@@ -46,6 +76,29 @@ router.put(
   }
 );
 
+/**
+ * @swagger
+ * /media/{id}:
+ *   delete:
+ *     summary: Deletes an image.
+ *     tags: [Media]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the image to delete.
+ *         schema:
+ *           type: integer
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Image deleted successfully.
+ *       404:
+ *         description: Image not found.
+ *       500:
+ *         description: Internal Server Error.
+ */
 router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
   const id = req.params.id;
 
@@ -88,6 +141,33 @@ router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
   });
 });
 
+
+/**
+ * @swagger
+ * /media/{id}:
+ *   get:
+ *     summary: Retrieves an image by ID.
+ *     tags: [Media]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the image.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Image retrieved successfully.
+ *         content:
+ *           image/*:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Image not found.
+ *       500:
+ *         description: Internal server error.
+ */
 router.get("/:id(\\d+)", function (req, res) {
   const id = req.params.id;
   // Retrieve the image details from the database

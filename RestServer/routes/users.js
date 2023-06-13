@@ -1,37 +1,70 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-
-
-// /user endpoint
-router.get('/', function(req, res) {
-  if(!req.body)
-  // authenticate request
-  if(!req.body.email){
-      res.status(406).send("false credentials");
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get user data by ID
+ *     description: Retrieve user data from the database based on the provided ID
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: User ID
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: User data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found
+ *       406:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal Server Error
+ */
+router.get("/:id(\\d)", authenticate, function (req, res) {
+  // Check if the request body exists and contains the email
+  if (!req.body || !req.body.email) {
+    return res.status(406).send("Invalid credentials");
   }
-  var userid = req.body[id]
-  if(!userid) res.status(406).send("missing id");
-  // get Data from Database
-  const stmt = db.prepare("SELECT name from USERS WHERE ID=?", userid);
-  var userdata = stmt.get();
-  if(!userdata){
-      res.status(406).send("user not found");
-  }
-  // send data
-  res.send(userdata);
+
+  // Get the user ID from the request parameters
+  const userId = req.params.id;
+
+  // Retrieve user data from the database
+  const userQuery =
+    "SELECT u.name as name, p.projectid as projectid FROM users u INNER JOIN projects p ON u.ID = p.userid WHERE u.ID = ?";
+  db.get(userQuery, [userId], function (err, row) {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Internal Server Error");
+    }
+    if (!row) {
+      return res.status(404).send("User not found");
+    }
+    // Send the user data
+    res.send(row);
+  });
 });
-
-
-
-
 
 module.exports = router;
 
+function createUser(email, password) {
+  db.run("INSERT INTO users VALUES (?, ?, ?)", null, email, encrypt(password));
+}
 
-function createUser(email, password){
-  db.run("INSERT INTO users VALUES (?, ?, ?)",
-  null,
-  email,
-  encrypt(password))
+function authenticate(req, res, next) {
+  // Check if user is authenticated
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  next();
 }

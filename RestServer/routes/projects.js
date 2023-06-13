@@ -4,8 +4,69 @@ var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database("./bin/db/test.db");
 
 // project endpoint
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Project:
+ *       type: object
+ *       properties:
+ *         ID:
+ *           type: integer
+ *           format: int64
+ *           description: The project ID
+ *         userid:
+ *           type: integer
+ *           format: int64
+ *           description: The user ID associated with the project
+ *         title:
+ *           type: string
+ *           description: The project title
+ *         description:
+ *           type: string
+ *           description: The project description
+ *         vidlink:
+ *           type: string
+ *           description: The video link associated with the project
+ *         moretext:
+ *           type: string
+ *           description: Additional text related to the project
+ *         lastedit:
+ *           type: integer
+ *           format: int64
+ *           description: The timestamp of the last edit of the project
+ *         creationdate:
+ *           type: integer
+ *           format: int64
+ *           description: The timestamp of the project creation date
+ */
 
-// get sends back project data responding to id
+ 
+/**
+ * @swagger
+ * /project/{id}:
+ *   get:
+ *     summary: Retrieves a project by ID.
+ *     tags: [Project]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the project.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Project retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Project'
+ *       404:
+ *         description: Project not found.
+ *       500:
+ *         description: Internal server error.
+ */
 router.get("/:id(\\d+)", async function (req, res) {
   try {
     // validate parameter
@@ -26,7 +87,74 @@ router.get("/:id(\\d+)", async function (req, res) {
   }
 });
 
-// POST project updates data in project
+
+/**
+* @swagger
+* components:
+*   schemas:
+*     Project:
+*       type: object
+*       properties:
+*         ID:
+*           type: integer
+*           format: int64
+*           description: The project ID
+*         userid:
+*           type: integer
+*           format: int64
+*           description: The user ID associated with the project
+*         title:
+*           type: string
+*           maxLength: 50
+*           description: The project title
+*         description:
+*           type: string
+*           description: The project description
+*         vidlink:
+*           type: string
+*           maxLength: 255
+*           description: The video link associated with the project
+*         moretext:
+*           type: string
+*           description: Additional text related to the project
+*         lastedit:
+*           type: integer
+*           format: int64
+*           description: The timestamp of the last edit
+*         creationdate:
+*           type: integer
+*           format: int64
+*           description: The timestamp of the project creation
+*/
+/**
+ * @swagger
+ * /project/{id}:
+ *   post:
+ *     summary: Updates a project by ID.
+ *     tags: [Project]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the project.
+ *         schema:
+ *           type: integer
+ *       - in: body
+ *         name: project
+ *         required: true
+ *         description: The updated project data.
+ *         schema:
+ *           $ref: '#/components/schemas/ProjectInput'
+ *     responses:
+ *       200:
+ *         description: Project updated successfully.
+ *       404:
+ *         description: Bad request or project not found.
+ *       406:
+ *         description: Invalid input or validation error.
+ *       405:
+ *         description: Internal server error.
+ */
 router.post("/:id", async function (req, res) {
   // validate id
   var _id = parseInt(req.params.id);
@@ -46,23 +174,46 @@ router.post("/:id", async function (req, res) {
     }
   }
   updateProject(req.body.id, req.body.project)
-  .then((result) =>{
-    res.send("SUCCESS");
-  })
-  .catch((err) => {
-    res.status(405).send("internal error occured");
-  })
+    .then((result) => {
+      res.send("SUCCESS");
+    })
+    .catch((err) => {
+      res.status(405).send("internal error occured");
+    });
 });
-
-// /overview endpoint, sends back all project data in a list
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ProjectList:
+ *       type: array
+ *       items:
+ *         $ref: '#/components/schemas/Project'
+ */
+/**
+ * @swagger
+ * /project/overview:
+ *   get:
+ *     summary: Retrieves project overview.
+ *     tags: [Project]
+ *     responses:
+ *       200:
+ *         description: Successful operation. Returns the project overview.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ProjectList'
+ *       500:
+ *         description: Internal server error.
+ */
 router.get("/overview", async function (req, res) {
   getProjects()
-  .then((result) => {
-    res.send(projects)
-  })
-  .catch((err)=>{
-    res.status(500).send("An internal error occured")
-  })
+    .then((result) => {
+      res.send(projects);
+    })
+    .catch((err) => {
+      res.status(500).send("An internal error occured");
+    });
 });
 
 module.exports = router;
