@@ -39,10 +39,6 @@ var db = new sqlite3.Database("./bin/db/test.db");
  *           type: integer
  *           format: int64
  *           description: The timestamp of the project creation date
- */
-
- 
-/**
  * @swagger
  * /project/{id}:
  *   get:
@@ -87,46 +83,26 @@ router.get("/:id(\\d+)", async function (req, res) {
   }
 });
 
-
 /**
-* @swagger
-* components:
-*   schemas:
-*     Project:
-*       type: object
-*       properties:
-*         ID:
-*           type: integer
-*           format: int64
-*           description: The project ID
-*         userid:
-*           type: integer
-*           format: int64
-*           description: The user ID associated with the project
-*         title:
-*           type: string
-*           maxLength: 50
-*           description: The project title
-*         description:
-*           type: string
-*           description: The project description
-*         vidlink:
-*           type: string
-*           maxLength: 255
-*           description: The video link associated with the project
-*         moretext:
-*           type: string
-*           description: Additional text related to the project
-*         lastedit:
-*           type: integer
-*           format: int64
-*           description: The timestamp of the last edit
-*         creationdate:
-*           type: integer
-*           format: int64
-*           description: The timestamp of the project creation
-*/
-/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ProjectInput:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: The project title
+ *         description:
+ *           type: string
+ *           description: The project description
+ *         vidlink:
+ *           type: string
+ *           description: The video link associated with the project
+ *         moretext:
+ *           type: string
+ *           description: Additional text related to the project
+ * 
  * @swagger
  * /project/{id}:
  *   post:
@@ -173,7 +149,7 @@ router.post("/:id", async function (req, res) {
       return;
     }
   }
-  updateProject(req.body.id, req.body.project)
+  updateProject(req.params.id, req.body)
     .then((result) => {
       res.send("SUCCESS");
     })
@@ -189,8 +165,6 @@ router.post("/:id", async function (req, res) {
  *       type: array
  *       items:
  *         $ref: '#/components/schemas/Project'
- */
-/**
  * @swagger
  * /project/overview:
  *   get:
