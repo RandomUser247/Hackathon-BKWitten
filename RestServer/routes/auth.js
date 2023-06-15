@@ -2,13 +2,26 @@ var express = require("express");
 var router = express.Router();
 var path = require("path");
 var bcrypt = require("bcrypt");
-var helper = require("../bin/helpers");
+var helpers = require("../bin/helpers");
+var database = require("../bin/db/databaseInteractor");
 
-// database instance #######################################################
-var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database("./bin/db/test.db");
-const saltround = 10;
-
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     LoginRequest:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: The user's email address.
+ *         password:
+ *           type: string
+ *           description: The user's password.
+ *       required:
+ *         - email
+ *         - password
+ */
 /**
  * @swagger
  * /auth:
@@ -43,7 +56,8 @@ router.post("/", async function (req, res) {
   }
   // validate password
   else {
-    postLogin(email, password)
+    database
+      .postLogin(email.toLowerCase(), password)
       .then((user) => {
         if (!user) {
           res.status(406).send("Wrong credentials");
@@ -53,7 +67,6 @@ router.post("/", async function (req, res) {
           req.session.user = { email: user.email, userid: user.id };
           res.redirect("http://localhost:4200/");
         });
-        res.send("Success");
       })
       .catch((error) => {
         console.error(error);
@@ -95,6 +108,9 @@ router.delete("/", function (req, res) {
  *           schema:
  *             type: object
  *             properties:
+ *               email:
+ *                  type: string
+ *                  description: user email for verification purposes
  *               currentPassword:
  *                 type: string
  *                 description: Current password.
@@ -104,6 +120,7 @@ router.delete("/", function (req, res) {
  *             required:
  *               - currentPassword
  *               - newPassword
+ *               - email
  *     responses:
  *       200:
  *         description: Password updated successfully.
@@ -116,71 +133,40 @@ router.delete("/", function (req, res) {
  */
 router.put("/", async function (req, res) {
   // Get the user's current password and new password from the request body
-  const { currentPassword, newPassword } = req.body;
-  // Check session
-  if (!req.session.user)
-    return res.status(401).json({ message: "Unauthorized" });
-  // Authenticate by current password (you can replace this with your own authentication logic)
-  else if (currentPassword !== req.session.user.password)
-    return res.status(401).json({ message: "Invalid current password" });
-  // Validate the new password (you can replace this with your own validation logic)
-  else if (newPassword.length < 6)
-    return res
-      .status(400)
-      .json({ message: "New password must be at least 6 characters long" });
-  // Update the user's password (you need to implement your own logic to update the password in the database)
-  else {
-    changePassword(req.session.userid, newPassword)
-      .then((result) => {
-        res.json({ message: "Password updated successfully" });
-      })
-      .catch((err) => {
-        res.status(505).json({ message: "internal error" });
+  const { currentPassword, newPassword, email } = req.body;
+
+  try {
+    // Check session
+    if (!req.session.user)
+      return res.status(401).json({ message: "Unauthorized" });
+    else if (req.session.user.email != email)
+      return res.status(401).json({ message: "Invalid Email" });
+
+    // Authenticate by current password
+    const hashpass = await database.getUserPassword(req.session.user.email);
+    if(!hashpass){
+      return res.status(404).json({message: "User not found"})
+    }
+    const isValidPassword = await helpers.validatepass(
+      currentPassword,
+      hashpass
+    );
+    if (!isValidPassword)
+      return res.status(401).json({ message: "Invalid current password" });
+
+    // Validate the new password
+    if (newPassword.length < 6)
+      return res.status(400).json({
+        message: "New password must be at least 6 characters long",
       });
+
+    // Update the user's password
+    await database.changePassword(req.session.userid, newPassword);
+    res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal error" });
   }
 });
 
 module.exports = router;
-
-// check login data
-async function postLogin(email, password) {
-  return new Promise((resolve, reject) => {
-    const stmt = db.prepare(
-      "SELECT email, password FROM users WHERE email=?",
-      email
-    );
-    var user = stmt.get();
-    if (!user) reject("no user found");
-    bcrypt
-      .compare(password, user.password)
-      .then((result) => {
-        if (result) {
-          resolve(user);
-        } else {
-          resolve(null);
-        }
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-}
-
-async function changePassword(userId, newPassword) {
-  return new Promise((resolve, reject) => {
-    const updatePasswordQuery = db.prepare(
-      "UPDATE users SET hashpass = ? WHERE ID = ?"
-    );
-    db.serialize(() => {
-      updatePasswordQuery.run(newPassword, userId, function (err) {
-        if (err) {
-          console.error("Error updating password:", err);
-          reject(err);
-        } else {
-          console.log("Password updated successfully");
-          resolve(true);
-        }
-      });
-    });
-  });
-}

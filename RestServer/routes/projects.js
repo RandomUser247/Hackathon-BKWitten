@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database("./bin/db/test.db");
+var database = require("../bin/db/databaseInteractor")
 
 // project endpoint
 /**
@@ -71,7 +70,7 @@ router.get("/:id(\\d+)", async function (req, res) {
       res.status(404).send("NO SUCH PROJECT");
     }
     // get project data
-    var project = await getProject(_id);
+    var project = await database.getProject(_id);
     if (!project) {
       res.status(404).send("project not found");
     }
@@ -149,7 +148,7 @@ router.post("/:id", async function (req, res) {
       return;
     }
   }
-  updateProject(req.params.id, req.body)
+  database.updateProject(req.params.id, req.body)
     .then((result) => {
       res.send("SUCCESS");
     })
@@ -157,6 +156,8 @@ router.post("/:id", async function (req, res) {
       res.status(405).send("internal error occured");
     });
 });
+
+
 /**
  * @swagger
  * components:
@@ -181,7 +182,7 @@ router.post("/:id", async function (req, res) {
  *         description: Internal server error.
  */
 router.get("/overview", async function (req, res) {
-  getProjects()
+  database.getProjects()
     .then((result) => {
       res.send(projects);
     })
@@ -192,67 +193,3 @@ router.get("/overview", async function (req, res) {
 
 module.exports = router;
 
-// try to get project by id and return project object
-function getProject(projectid) {
-  return new Promise((resolve, reject) => {
-    db.get(
-      "SELECT * FROM projects WHERE ID = ?",
-      projectid,
-      function (err, row) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (!row) {
-          console.log("no matching row found");
-          resolve(null);
-          return;
-        }
-        console.log(row);
-        resolve(row);
-      }
-    );
-  });
-}
-
-// return all stored projects
-function getProjects() {
-  return new Promise((resolve, reject) => {
-    db.all("SELECT * FROM projects", function (err, rows) {
-      if (err) {
-        reject(err);
-        return;
-      }
-      if (!rows) {
-        console.log("no rows found");
-        resolve(null);
-        return;
-      }
-      resolve(rows);
-    });
-  });
-}
-
-// Insert updated projectdata in database and return success
-function updateProject(projectid, project) {
-  return new Promise((resolve, reject) => {
-    const stmt = db.prepare(
-      "UPDATE projects SET \
-        title=$title, description=$description, vidlink=$vidlink, moretext=$moretext, lastedit=$lastedit\
-        WHERE id=$projectid",
-      {
-        title: project.title,
-        description: project.description,
-        vidlink: project.vidlink,
-        moretext: project.moretext,
-        lastedit: new Date().getTime(),
-        projectid: projectid,
-      }
-    );
-    try {
-      if (db.run(stmt)) resolve(true);
-    } catch (err) {
-      reject(err);
-    }
-  });
-}

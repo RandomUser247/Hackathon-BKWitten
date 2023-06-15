@@ -62,32 +62,80 @@ const projectData = [
   },
 ];
 
-var insertUserQuery = db.prepare(
-  "Insert INTO users (email, hashpass) VALUES (?, ?)"
-);
-var insertProjectQuery = db.prepare(
-  "INSERT INTO projects (userid, title, description, vidlink, moretext, lastedit, creationdate) VALUES ($userid, $title, $description, $vidlink, $moretext, $lastedit, $creationdate)"
-);
+var insertUserQuery = "Insert INTO users (email, hashpass) VALUES (?, ?)";
 
-db.serialize(() => {
-  usersData.forEach((user) => {
-    var hashedPassword = helpers.encrypt(user.password);
-    insertUserQuery.run(user.useremail, hashedPassword);
-  });
-  insertUserQuery.finalize();
-  console.log("users inserted");
-  projectData.forEach((project) => {
-    insertProjectQuery.run({
-      $userid: project.userid,
-      $title: project.title,
-      $description: project.description,
-      $vidlink: project.vidlink,
-      $moretext: project.moretext,
-      $lastedit: project.lastedit,
-      $creationdate: project.creationdate,
+var insertProjectQuery =
+  "INSERT INTO projects (userid, title, description, vidlink, moretext, lastedit, creationdate) VALUES ($userid, $title, $description, $vidlink, $moretext, $lastedit, $creationdate)";
+
+const insertUsersAndProjects = () => {
+  return new Promise((resolve, reject) => {
+    const insertUserPromises = usersData.map((user) => {
+      return helpers
+        .encrypt(user.password)
+        .then((hashedPassword) => {
+          return new Promise((resolve, reject) => {
+            db.run(insertUserQuery, [user.useremail.toLowerCase(), hashedPassword], (err) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve();
+              }
+            });
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     });
+
+    Promise.all(insertUserPromises)
+      .then(() => {
+        const insertProjectPromises = projectData.map((project) => {
+          return new Promise((resolve, reject) => {
+            db.run(
+              insertProjectQuery,
+              {
+                $userid: project.userid,
+                $title: project.title,
+                $description: project.description,
+                $vidlink: project.vidlink,
+                $moretext: project.moretext,
+                $lastedit: project.lastedit,
+                $creationdate: project.creationdate,
+              },
+              (err) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              }
+            );
+          });
+        });
+
+        Promise.all(insertProjectPromises)
+          .then(() => {
+            console.log("Users and projects inserted");
+            db.close();
+            resolve();
+          })
+          .catch((err) => {
+            console.error(err);
+            reject(err);
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+        reject(err);
+      });
   });
-  insertProjectQuery.finalize();
-  console.log("projects inserted");
-  db.close();
-});
+};
+
+insertUsersAndProjects()
+  .then(() => {
+    console.log("All operations completed successfully");
+  })
+  .catch((err) => {
+    console.error("An error occurred:", err);
+  });

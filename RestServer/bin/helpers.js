@@ -1,36 +1,40 @@
 const bcrypt = require("bcrypt");
 const saltround = 10;
 
-
 // basic encrytion
-function encrypt(password){
+function encrypt(password) {
+  return new Promise((resolve, reject) => {
     bcrypt
-    .hash(password,saltround)
-    .then(hash => {return hash})
-    .catch(e => {
-        console.error(e);
-        return null;
-    })
+      .hash(password, saltround)
+      .then((hash) => {
+        resolve(hash);
+      })
+      .catch((e) => {
+        reject(error);
+      });
+  });
 }
 
 // check if password equals stored hash
-function validatepass(password, hash){
-    bcrypt.compare(password,hash)
-    .then(res => {return true})
-    .catch(e => {
-        console.error(e);
-        return false;
-    })
+function validatepass(password, hash) {
+  return new Promise((resolve, reject) => {
+    bcrypt
+      .compare(password, hash)
+      .then((res) => {
+        resolve(true);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
 }
 
-
-function checklogin(req, res, next){
-    if(req.session.user){
-        next();
-    }
-    else{
-        res.status(401).send("Unauthorized access");
-    }
+function checklogin(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    res.status(401).send("Unauthorized access");
+  }
 }
 
-module.exports = { validatepass, checklogin, encrypt};
+module.exports = { validatepass, checklogin, encrypt };
