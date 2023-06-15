@@ -1,0 +1,9 @@
+﻿################################################################################
+# Diese .gitignore-Datei wurde von Microsoft(R) Visual Studio automatisch erstellt.
+################################################################################
+
+/.vs/Hackathon-BKWitten/FileContentIndex
+/.vs/Hackathon-BKWitten/v17
+/.vs/Hackathon-BKWitten/config
+/.vs
+/package-lock.json

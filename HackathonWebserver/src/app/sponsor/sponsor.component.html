@@ -1,0 +1,34 @@
+<!-- header -->
+<div class="container-fluid">
+  <app-navbar></app-navbar>
+</div>
+
+<main style="margin-top: -49px">
+  <div class="container-fluid" style="height: 100vh">
+    <div class="content card border-light">
+
+      <h1 style="align-self: center; padding-top: 5vh">Sponsoren</h1>
+      <ul>
+        <div *ngIf="SPONSORS && SPONSORS.length > 0; else noSponsors">
+          <div *ngFor="let sponsor of SPONSORS">
+            <img src="assets/Images/logo-bkwitten4.png" style="padding-top: 5vh">
+            <h3>{{sponsor.title}}</h3>
+            <div>{{sponsor.text}}</div>
+          </div>
+        </div>
+        <ng-template #noSponsors>
+          <div>
+            Hier ist aktuell nichts vorzufinden.
+          </div>
+        </ng-template>
+      </ul>
+
+      <!-- footer -->
+      <div style="padding-top: 5vh">
+        <app-footer></app-footer>
+      </div>
+
+    </div>
+  </div>
+</main>
+

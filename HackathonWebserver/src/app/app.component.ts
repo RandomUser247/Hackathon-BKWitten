@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-
+import { Router } from '@angular/router';
+import '@ng-bootstrap/ng-bootstrap'
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
