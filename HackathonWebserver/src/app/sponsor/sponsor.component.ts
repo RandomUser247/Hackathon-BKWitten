@@ -9,8 +9,8 @@ export class SponsorComponent {
 
   SPONSORS = [
 
-  {id: 1, logo: "assets/Images/logo-bkwitten4.png", text: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.", titel: "Sponsor 1"},
-    {id: 2, logo: "assets/Images/logo-bkwitten4.png", text: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.", titel: "Sponsor 2"}
+  {id: 1, logo: "assets/Images/logo-bkwitten4.png", text: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.", title: "Sponsor 1"},
+    {id: 2, logo: "assets/Images/logo-bkwitten4.png", text: "Lorem ipsum dolor, sit amet consectetur adipisicing elit.", title: "Sponsor 2"}
 
   ]
 

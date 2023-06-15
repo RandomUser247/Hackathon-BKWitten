@@ -65,3 +65,7 @@ body {
     padding: 0;
     background-color: #f0f0f0;
 }
+
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+  --bs-gutter-x: 0.rem;
+}

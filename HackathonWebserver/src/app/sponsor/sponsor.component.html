@@ -4,16 +4,23 @@
 </div>
 
 <main style="margin-top: -49px">
-  <div class="container-fluid" style="height: 100vh"> <!-- ./container-fluid -->
-    <div class="content card border-light"> <!-- ./content -->
+  <div class="container-fluid" style="height: 100vh">
+    <div class="content card border-light">
 
       <h1 style="align-self: center; padding-top: 5vh">Sponsoren</h1>
       <ul>
-        <div *ngFor="let sponsor of SPONSORS">
-          <img src="assets/Images/logo-bkwitten4.png" style="padding-top: 5vh">
-          <h3>{{sponsor.titel}}</h3>
-          <div>{{sponsor.text}}</div>
+        <div *ngIf="SPONSORS && SPONSORS.length > 0; else noSponsors">
+          <div *ngFor="let sponsor of SPONSORS">
+            <img src="assets/Images/logo-bkwitten4.png" style="padding-top: 5vh">
+            <h3>{{sponsor.title}}</h3>
+            <div>{{sponsor.text}}</div>
+          </div>
         </div>
+        <ng-template #noSponsors>
+          <div>
+            Hier ist aktuell nichts vorzufinden.
+          </div>
+        </ng-template>
       </ul>
 
       <!-- footer -->
@@ -21,9 +28,7 @@
         <app-footer></app-footer>
       </div>
 
-    </div> <!-- ./content -->
-  </div> <!-- ./container-fluid -->
-
-
+    </div>
+  </div>
 </main>
 
