@@ -1,12 +1,18 @@
-@media screen and (min-width: 800px) {
-  a {
-    font-size: 1.5em;
+@media only screen and (max-width: 600px) {
+  .link {
+    font-size: 0.5em;
   }
 }
-
-@media screen and (max-width: 8000px) {
-  a {
+@media only screen and (min-width: 600px) {
+  .link {
+    font-size: 1em;
+    margin: 10px;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .link {
     font-size: 1.5em;
+    margin: 20px;
   }
 }
 
@@ -33,8 +39,7 @@ a {
 .circle {
   width: 100%;
   background-color: #0e79c1;
-  border-radius: 40rem 40rem 0 0;
-  padding-top: 20%;
+  border-radius: 50rem / 30rem 30rem 0 0;
   color: white;
 }
 
@@ -81,4 +86,8 @@ button {
 
 .link:hover {
   color: #efeaea;
+}
+.logo {
+  max-width: 70%;
+  height: auto;
 }
