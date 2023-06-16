@@ -1,6 +1,11 @@
 @media only screen and (max-width: 600px) {
   .link {
-    font-size: 0.5em;
+    font-size: 0.75em;
+  }
+  .logo {
+    max-width: 20%;
+    height: auto;
+    margin: 5px;
   }
 }
 @media only screen and (min-width: 600px) {
@@ -8,10 +13,20 @@
     font-size: 1em;
     margin: 10px;
   }
+  .logo {
+    max-width: 15%;
+    height: auto;
+    margin: 10px;
+  }
 }
 @media only screen and (min-width: 1200px) {
   .link {
     font-size: 1.5em;
+    margin: 20px;
+  }
+  .logo {
+    max-width: 15%;
+    height: auto;
     margin: 20px;
   }
 }
@@ -95,8 +110,3 @@ button {
   justify-content: center;
 }
 
-.logo {
-  max-width: 15%;
-  height: auto;
-  margin: 10px;
-}
