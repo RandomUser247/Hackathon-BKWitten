@@ -45,8 +45,9 @@ var database = require("../bin/db/databaseInteractor");
 router.post("/", async function (req, res) {
   const { email, password } = req.body;
   // check session if already logged in
+
   if (req.session.user) {
-    res.send("User is logged in");
+    res.status(200).send("Already logged in");
     return;
   }
   // validate body
@@ -63,10 +64,11 @@ router.post("/", async function (req, res) {
           res.status(406).send("Wrong credentials");
           return;
         }
-        req.session.regenerate(function () {
-          req.session.user = { email: user.email, userid: user.id };
-          res.redirect("http://localhost:4200/");
-        });
+        // set session
+        req.session.user = {id: user.id, email: user.email, name: user.name};
+        req.session.save();
+        // redirect to home page
+        res.redirect("localhost:4200/overview");
       })
       .catch((error) => {
         console.error(error);
