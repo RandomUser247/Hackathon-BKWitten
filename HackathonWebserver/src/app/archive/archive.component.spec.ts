@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ArchiveComponent } from './archive.component';
 
-import { FooterComponent } from './footer.component';
-
-describe('FooterComponent', () => {
-  let component: FooterComponent;
-  let fixture: ComponentFixture<FooterComponent>;
+describe('ArchiveComponent', () => {
+  let component: ArchiveComponent;
+  let fixture: ComponentFixture<ArchiveComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [FooterComponent]
+      declarations: [ ArchiveComponent ]
     })
-      .compileComponents();
+    .compileComponents();
 
-    fixture = TestBed.createComponent(FooterComponent);
+    fixture = TestBed.createComponent(ArchiveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

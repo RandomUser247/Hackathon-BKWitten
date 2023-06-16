@@ -3,11 +3,37 @@
   <app-navbar></app-navbar>
 </div>
 
-<main>
+<main style="margin-top: -49px">
   <div class="container-fluid" style="height: 100vh"> <!-- ./container-fluid -->
-    <div class="content card"> <!-- ./content -->
+    <div class="content card border-light"> <!-- ./content -->
 
-    <!-- Banner. -->
+      <!-- Sponsoren Banner -->
+      <div class="logos">
+        <div class="logos-slide">
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+        </div>
+
+        <div class="logos-slide">
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+          <img src="assets/Images/logo-bkwitten4.png" [routerLink]="['/sponsor']"/>
+        </div>
+      </div>
+
+
+      <!-- Banner. -->
     <div class="row image d-flex justify-content-center mx-0"> <!-- ./row -->
       <div class="title">
       <h1 class="banner-title" Style="color: white; text-align: center">Hackathon 2023</h1>
@@ -19,7 +45,7 @@
 
     <!-- -->
     <div class="main-container px-3">
-    <article class="row mt-2">
+    <article class="row mt-2" style="padding-bottom: 5vh">
       <p class="">Schule hat sich in den letzten Jahren rasant verändert.
         Nicht nur die Art und Weise, wie gelernt und gelehrt
         wird, ist einem Wandel unterworfen, sondern auch die

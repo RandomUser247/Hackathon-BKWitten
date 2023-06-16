@@ -2,12 +2,20 @@
     display: flex;
     justify-content: space-between;
     flex-direction: row;
-    height: 1fr;
+    height: 100%;
     width: 100%;
-    background-color: #e34634;
+    gap: 4.5%;
+    background-color: white;
 }
 
-.navbar {
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 2px;
+}
+.navbar-brand {
+  width: 100%;
 }
 
 .navbar .navbar-nav .active>.nav-link,
@@ -19,46 +27,54 @@
     color: #fec400
 }
 
-
-
 .main-container {
-    height: 4rem;
-    margin-top: 2rem;
+
+    height: 100%;
+    margin-top: 0.5rem;
+
+
 }
 
 .nav-link {
-    border-radius: 5%;
-    border: 2px solid white;
+    border-radius: 10%;
+    height: 3rem;
+    text-align: center;
+
+    border: 1px solid white;
 }
-
-
 
 .nav-link:nth-child(1):hover {
     background-color: #f9b42f;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
 
 .nav-link:nth-child(2):hover {
-    background-color: #e34634;
-    border: 2px solid #000000;
+    background-color: #d41500;
+    border: 1px solid #000000;
 }
 
 .nav-link:nth-child(3):hover {
     background-color: #0e79c1;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
 
 .nav-link:nth-child(4):hover {
     background-color: #308b4d;
-    border: 2px solid #000000;
+    border: 1px solid #000000;
+}
+
+.nav-link:nth-child(5):hover {
+    background-color: #EA5B0C;
+    border: 1px solid #000000;
 }
 
 .btn {
-    background-color: rgb(214, 214, 214);
-    border: 2px solid #000000;
+    background-color: rgb(190, 190, 190);
+    border: 1px solid #ffffff;
 }
 
 .btn:hover {
     background-color: rgb(233, 230, 230);
-    border: 2px solid #000000;
+    border: 1px solid #000000;
 }
+

@@ -1,12 +1,33 @@
-@media screen and (min-width: 800px) {
-  a {
-    font-size: 1.5em;
+@media only screen and (max-width: 600px) {
+  .link {
+    font-size: 0.75em;
+  }
+  .logo {
+    max-width: 20%;
+    height: auto;
+    margin: 5px;
   }
 }
-
-@media screen and (max-width: 800px) {
-  a {
+@media only screen and (min-width: 600px) {
+  .link {
     font-size: 1em;
+    margin: 10px;
+  }
+  .logo {
+    max-width: 15%;
+    height: auto;
+    margin: 10px;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .link {
+    font-size: 1.5em;
+    margin: 20px;
+  }
+  .logo {
+    max-width: 15%;
+    height: auto;
+    margin: 20px;
   }
 }
 
@@ -16,7 +37,7 @@ a {
   text-decoration: none;
   padding-right: 3%;
   padding-left: 3%;
-  
+  border-color: #0e79c1;
 }
 
 .main-container {
@@ -33,17 +54,18 @@ a {
 .circle {
   width: 100%;
   background-color: #0e79c1;
-  border-radius: 90rem 90rem 0 0;
-  padding-top: 40%;
+  border-radius: 50rem / 30rem 30rem 0 0;
   color: white;
-
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1rem;
 }
 
 .links {
@@ -52,3 +74,39 @@ a {
   display: flex;
   word-wrap: break-word;
 }
+
+button {
+  background-color: transparent;
+  border-color: #0e79c1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.modal-header {
+  color: black;
+}
+
+.modal-body {
+  color: black;
+}
+
+.modal-footer {
+  color: black;
+}
+
+.modal-button {
+  color: black;
+  border-color: gray;
+}
+.modal-button:hover {
+  color: white;
+}
+
+.link:hover {
+  color: #efeaea;
+}
+.logo-row {
+  display: flex;
+  justify-content: center;
+}
+
