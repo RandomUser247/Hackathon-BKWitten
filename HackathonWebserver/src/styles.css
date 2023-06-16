@@ -1,1 +1,71 @@
 /* You can add global styles to this file, and also import other style files */
+
+@media only screen and (max-width: 600px) {
+    main {
+      padding-left: 0vw;
+      padding-right: 0vw;
+    }
+  }
+  @media only screen and (min-width: 600px) {
+    main {
+      padding-left: 10vw;
+      padding-right: 10vw;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    main {
+      padding-left: 20vw;
+      padding-right: 20vw;
+    }
+  }
+
+.ht-blue{
+    background-color: #0e79c1;
+}
+
+.ht-green {
+    background-color: #308b4d;
+}
+
+.ht-red{
+    background-color: #e34634;
+}
+
+.ht-yellow{
+    background-color: #f9b42f;
+}
+
+img.dot-sml,span.dot-sml {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    position: absolute;
+    z-index: -998;
+}
+
+img.dot-med,span.dot-med {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    position: absolute;
+    z-index: -999;
+}
+
+img.dot-big,span.dot-big {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    position: relative;
+    z-index: -1000;
+}
+p {
+    z-index: 1000;
+}
+body {
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+  --bs-gutter-x: 0.rem;
+}

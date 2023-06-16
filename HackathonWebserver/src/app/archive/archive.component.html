@@ -1,0 +1,29 @@
+<!-- header -->
+<div class="container-fluid">
+  <app-navbar></app-navbar>
+</div>
+
+<main style="margin-top: -49px">
+  <div class="container-fluid" style="height: 100vh"> <!-- ./container-fluid -->
+    <div class="content card border-light"> <!-- ./content -->
+
+      <ul>
+        <div *ngFor="let stream of STREAMS">
+          <h2 Style="padding-top: 2vh; padding-bottom: 2vh">Stream Tag {{stream.id}}</h2>
+          <div class="d-flex embed-responsive embed-responsive-16by9 justify-content-center ratio ratio-16x9">
+            <iframe allowfullscreen class="embed-responsive-item" [src]="stream.url"
+              style="padding-bottom: 3vh"></iframe>
+          </div>
+        </div>
+      </ul>
+
+      <!-- footer -->
+      <div>
+        <app-footer></app-footer>
+      </div>
+
+    </div> <!-- ./content -->
+  </div> <!-- ./container-fluid -->
+
+
+</main>

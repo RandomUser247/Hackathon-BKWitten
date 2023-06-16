@@ -1,0 +1,37 @@
+@media only screen and (max-width: 600px) {
+  main {
+    padding-left: 0vw;
+    padding-right: 0vw;
+  }
+}
+@media only screen and (min-width: 600px) {
+  main {
+    padding-left: 10vw;
+    padding-right: 10vw;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  main {
+    padding-left: 20vw;
+    padding-right: 20vw;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f2f2f2;
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
