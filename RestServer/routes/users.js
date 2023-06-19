@@ -5,8 +5,7 @@ var router = express.Router();
  * @swagger
  * /users/{id}:
  *   get:
- *     summary: Get user data by ID
- *     description: Retrieve user data from the database based on the provided ID
+ *     summary: Retrieves user data by ID.
  *     tags:
  *       - Users
  *     parameters:
@@ -23,6 +22,8 @@ var router = express.Router();
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: User not found
  *       406:
@@ -31,14 +32,8 @@ var router = express.Router();
  *         description: Internal Server Error
  */
 router.get("/:id(\\d)", authenticate, function (req, res) {
-  // Check if the request body exists and contains the email
-  if (!req.body || !req.body.email) {
-    return res.status(406).send("Invalid credentials");
-  }
-
   // Get the user ID from the request parameters
   const userId = req.params.id;
-
   // Retrieve user data from the database
   const userQuery =
     "SELECT u.name as name, p.projectid as projectid FROM users u INNER JOIN projects p ON u.ID = p.userid WHERE u.ID = ?";
@@ -63,7 +58,7 @@ function createUser(email, password) {
 
 function authenticate(req, res, next) {
   // Check if user is authenticated
-  if (!req.session.user) {
+  if (req.session.user.id != req.params.id) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   next();

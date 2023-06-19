@@ -4,6 +4,7 @@ var path = require("path");
 var bcrypt = require("bcrypt");
 var helpers = require("../bin/helpers");
 var database = require("../bin/db/databaseInteractor");
+const { log } = require("console");
 
 /**
  * @swagger
@@ -65,10 +66,16 @@ router.post("/", async function (req, res) {
           return;
         }
         // set session
-        req.session.user = {id: user.id, email: user.email, name: user.name};
-        req.session.save();
-        // redirect to home page
-        res.redirect("localhost:4200/overview");
+        log(user)
+        req.session.user = { id: user.ID, email: user.email};
+        req.session.save(function (err) {
+          if (err) {
+            console.error(err);
+            res.status(500).send("An error occurred during login");
+            return;
+          }
+          res.status(200).send("Login successful");
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -92,6 +99,7 @@ router.delete("/", function (req, res) {
     if (err) {
       console.error("ERROR destroying session: ", err);
     }
+    req.session = null;
     res.send("Logout sucessfull");
   });
 });
@@ -136,35 +144,52 @@ router.delete("/", function (req, res) {
 router.put("/", async function (req, res) {
   // Get the user's current password and new password from the request body
   const { currentPassword, newPassword, email } = req.body;
-
+  log(req.session.user);
   try {
     // Check session
-    if (!req.session.user)
+    if (!req.session.user){
+      console.log("Unauthorized", req.session.user);
       return res.status(401).json({ message: "Unauthorized" });
+    }
     else if (req.session.user.email != email)
       return res.status(401).json({ message: "Invalid Email" });
 
     // Authenticate by current password
     const hashpass = await database.getUserPassword(req.session.user.email);
-    if(!hashpass){
-      return res.status(404).json({message: "User not found"})
+    if (!hashpass) {
+      return res.status(404).json({ message: "User not found" });
     }
-    const isValidPassword = await helpers.validatepass(
-      currentPassword,
-      hashpass
-    );
-    if (!isValidPassword)
-      return res.status(401).json({ message: "Invalid current password" });
-
+    helpers
+      .validatepass(currentPassword, hashpass)
+      .then((valid) => {
+        if (!valid) {
+          return res.status(401).json({ message: "Invalid current password" });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        return res.status(500).json({ message: "Internal error" });
+      });
     // Validate the new password
     if (newPassword.length < 6)
       return res.status(400).json({
         message: "New password must be at least 6 characters long",
       });
-
-    // Update the user's password
-    await database.changePassword(req.session.userid, newPassword);
-    res.json({ message: "Password updated successfully" });
+    if (newPassword.length > 50)
+      return res.status(400).json({
+        message: "New password must be at most 50 characters long",
+      });
+    database
+      .changePassword(req.session.user.id, newPassword)
+      .then(() => {
+        return res
+          .status(200)
+          .json({ message: "Password updated successfully" });
+      })
+      .catch((err) => {
+        console.error(err);
+        return res.status(500).json({ message: "Internal error" });
+      });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal error" });

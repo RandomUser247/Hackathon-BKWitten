@@ -21,7 +21,7 @@ function validatepass(password, hash) {
     bcrypt
       .compare(password, hash)
       .then((res) => {
-        resolve(true);
+        resolve(res);
       })
       .catch((e) => {
         reject(e);

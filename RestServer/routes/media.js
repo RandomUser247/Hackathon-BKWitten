@@ -8,19 +8,15 @@ const path = require("path");
 var database = require("../bin/db/databaseInteractor")
 
 router.use("/", express.static("./public/images"));
+
+
 /**
  * @swagger
- * /media/{id}:
+ * /media:
  *   put:
  *     summary: Uploads an image.
  *     tags: [Media]
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The ID of the image.
- *         schema:
- *           type: integer
  *       - in: formData
  *         name: image
  *         required: true
@@ -165,7 +161,7 @@ router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
 router.get("/:id(\\d+)", function (req, res) {
   const id = req.params.id;
   // Retrieve the image details from the database
-  getPath(id)
+  database.getPath(id)
     .then((imageDetails) => {
       if (!imageDetails) {
         res.status(404).send("Image not found");
@@ -178,6 +174,50 @@ router.get("/:id(\\d+)", function (req, res) {
       res.status(500).send("Internal Server Error");
     });
 });
+
+/**
+ * @swagger
+ *  /media/own:
+ *   get:
+ *     summary: Retrieves an image by ID.
+ *     tags: [Media]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the image.
+ *         schema:
+ *           type: integer
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Image retrieved successfully.
+ *         content:
+ *           image/:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Image not found.
+ *       500:
+ *         description: Internal server error. 
+ */
+router.get("/own", isOwner, function (req, res) {
+  const id = req.params.id;
+  // Retrieve the image details from the database
+  database.getPath(id)
+  .then((imageDetails) => {
+      res.send({imageDetails});
+  })
+  .catch((error) => {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+  }
+  );
+});
+
+
 
 async function isOwner(req, res, next) {
   var userID = req.userid;
