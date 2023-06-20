@@ -6,6 +6,8 @@ const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const path = require("path");
 var database = require("../bin/db/databaseInteractor")
+const { isOwner } = require("../bin/middleware");
+const { uploadFolder } = require("../bin/config");
 
 router.use("/", express.static("./public/images"));
 
@@ -203,8 +205,8 @@ router.get("/:id(\\d+)", function (req, res) {
  *       500:
  *         description: Internal server error. 
  */
-router.get("/own", isOwner, function (req, res) {
-  const id = req.params.id;
+router.get("/own", function (req, res) {
+  const id = req.session.user.id;
   // Retrieve the image details from the database
   database.getPath(id)
   .then((imageDetails) => {
@@ -219,13 +221,6 @@ router.get("/own", isOwner, function (req, res) {
 
 
 
-async function isOwner(req, res, next) {
-  var userID = req.userid;
-  var projectID = req.params.id;
-  if (userID == (await database.getOwnerID(projectID))) {
-    return next();
-  }
-  res.redirect("http://localhost:4200/login");
-}
+
 
 module.exports = router;

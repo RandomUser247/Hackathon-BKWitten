@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const saltround = 10;
 
+const database = require("./db/databaseInteractor.js");
+
 // basic encrytion
 function encrypt(password) {
   return new Promise((resolve, reject) => {
@@ -16,25 +18,23 @@ function encrypt(password) {
 }
 
 // check if password equals stored hash
-function validatepass(password, hash) {
-  return new Promise((resolve, reject) => {
-    bcrypt
-      .compare(password, hash)
-      .then((res) => {
-        resolve(res);
-      })
-      .catch((e) => {
-        reject(e);
-      });
-  });
+function comparePasswords(req, res, next) {
+  const { password, newPassword, email } = req.body;
+  bcrypt
+    .compareSync(password, database.getUserPassword(email))
+    .then((result) => {
+      if (!result) {
+        res.status(406).send("Wrong credentials");
+        return;
+      }
+      next();
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("An error occurred during login");
+    });
 }
 
-function checklogin(req, res, next) {
-  if (req.session.user) {
-    next();
-  } else {
-    res.status(401).send("Unauthorized access");
-  }
-}
 
-module.exports = { validatepass, checklogin, encrypt };
+
+module.exports = { comparePasswords, encrypt };

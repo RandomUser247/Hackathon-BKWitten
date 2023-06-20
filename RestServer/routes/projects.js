@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
-var database = require("../bin/db/databaseInteractor")
+var database = require("../bin/db/databaseInteractor");
+const val = require("../bin/validators");
 
 // project endpoint
 /**
@@ -62,13 +63,10 @@ var database = require("../bin/db/databaseInteractor")
  *       500:
  *         description: Internal server error.
  */
-router.get("/:id(\\d+)", async function (req, res) {
+router.get("/:id(\\d+)",[val.validateProjectID], async function (req, res) {
   try {
-    // validate parameter
-    var _id = parseInt(req.params.id);
-    if (!_id || _id < 0) {
-      res.status(404).send("NO SUCH PROJECT");
-    }
+    // get project id
+    var _id = req.params.id;
     // get project data
     var project = await database.getProject(_id);
     if (!project) {
@@ -130,16 +128,9 @@ router.get("/:id(\\d+)", async function (req, res) {
  *       405:
  *         description: Internal server error.
  */
-router.post("/:id", async function (req, res) {
-  // validate id
-  var _id = parseInt(req.params.id);
-  if (_id == NaN || _id < 0) {
-    res.status(404).send("BAD REQUEST");
-    return;
-  }
+router.post("/:id",[val.validateProjectID], async function (req, res) {
   // validate body data
   var params = req.body;
-  var paramlist = [];
   var err = "";
   if (params.title) {
     if (params.title.trim().length < 5) {
@@ -184,7 +175,41 @@ router.post("/:id", async function (req, res) {
 router.get("/overview", async function (req, res) {
   database.getProjects()
     .then((result) => {
-      res.send(projects);
+      res.send(result);
+    })
+    .catch((err) => {
+      res.status(500).send("An internal error occured");
+    });
+});
+
+// project search endpoint 
+/**
+ * @swagger
+ * /project/search/{search}:
+ *   get:
+ *     summary: Retrieves project list by search.
+ *     tags: [Project]
+ *     parameters:
+ *       - in: path
+ *         name: search
+ *         required: true
+ *         description: The search term.
+ *         schema:
+ *            type: string
+ *     responses:
+ *       200:
+ *         description: Successful operation. Returns the project list.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ProjectList'
+ *       500:
+ *         description: Internal server error.
+ */
+router.get("/search/:search", async function (req, res) {
+  database.getProjectsBySearch(req.params.search)
+    .then((result) => {
+      res.send(result);
     })
     .catch((err) => {
       res.status(500).send("An internal error occured");
