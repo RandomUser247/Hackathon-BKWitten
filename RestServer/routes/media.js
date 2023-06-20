@@ -9,7 +9,6 @@ var database = require("../bin/db/databaseInteractor")
 const { isOwner } = require("../bin/middleware");
 const { uploadFolder } = require("../bin/config");
 
-router.use("/", express.static("./public/images"));
 
 
 /**
@@ -183,13 +182,6 @@ router.get("/:id(\\d+)", function (req, res) {
  *   get:
  *     summary: Retrieves an image by ID.
  *     tags: [Media]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The ID of the image.
- *         schema:
- *           type: integer
  *     security:
  *       - BearerAuth: []
  *     responses:

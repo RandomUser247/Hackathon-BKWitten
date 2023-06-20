@@ -3,42 +3,17 @@ var router = express.Router();
 var database = require("../bin/db/databaseInteractor");
 const val = require("../bin/validators");
 
+
+
+
 // project endpoint
+router.options( "/:id\\d+", function (req, res) {
+  res.header("Allow", "GET,POST,OPTIONS");
+  res.status(200).send();
+});
+
+
 /**
- * @swagger
- * components:
- *   schemas:
- *     Project:
- *       type: object
- *       properties:
- *         ID:
- *           type: integer
- *           format: int64
- *           description: The project ID
- *         userid:
- *           type: integer
- *           format: int64
- *           description: The user ID associated with the project
- *         title:
- *           type: string
- *           description: The project title
- *         description:
- *           type: string
- *           description: The project description
- *         vidlink:
- *           type: string
- *           description: The video link associated with the project
- *         moretext:
- *           type: string
- *           description: Additional text related to the project
- *         lastedit:
- *           type: integer
- *           format: int64
- *           description: The timestamp of the last edit of the project
- *         creationdate:
- *           type: integer
- *           format: int64
- *           description: The timestamp of the project creation date
  * @swagger
  * /project/{id}:
  *   get:
@@ -63,7 +38,7 @@ const val = require("../bin/validators");
  *       500:
  *         description: Internal server error.
  */
-router.get("/:id(\\d+)",[val.validateProjectID], async function (req, res) {
+router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
   try {
     // get project id
     var _id = req.params.id;
@@ -84,22 +59,7 @@ router.get("/:id(\\d+)",[val.validateProjectID], async function (req, res) {
  * @swagger
  * components:
  *   schemas:
- *     ProjectInput:
- *       type: object
- *       properties:
- *         title:
- *           type: string
- *           description: The project title
- *         description:
- *           type: string
- *           description: The project description
- *         vidlink:
- *           type: string
- *           description: The video link associated with the project
- *         moretext:
- *           type: string
- *           description: Additional text related to the project
- * 
+ 
  * @swagger
  * /project/{id}:
  *   post:
@@ -128,7 +88,7 @@ router.get("/:id(\\d+)",[val.validateProjectID], async function (req, res) {
  *       405:
  *         description: Internal server error.
  */
-router.post("/:id",[val.validateProjectID], async function (req, res) {
+router.post("/:id", [val.validateProjectID], async function (req, res) {
   // validate body data
   var params = req.body;
   var err = "";
@@ -139,7 +99,8 @@ router.post("/:id",[val.validateProjectID], async function (req, res) {
       return;
     }
   }
-  database.updateProject(req.params.id, req.body)
+  database
+    .updateProject(req.params.id, req.body)
     .then((result) => {
       res.send("SUCCESS");
     })
@@ -148,15 +109,13 @@ router.post("/:id",[val.validateProjectID], async function (req, res) {
     });
 });
 
+router.options("/overview", function (req, res) {
+  res.header("Allow", "GET,OPTIONS");
+  res.status(200).send();
+});
+
 
 /**
- * @swagger
- * components:
- *   schemas:
- *     ProjectList:
- *       type: array
- *       items:
- *         $ref: '#/components/schemas/Project'
  * @swagger
  * /project/overview:
  *   get:
@@ -173,7 +132,8 @@ router.post("/:id",[val.validateProjectID], async function (req, res) {
  *         description: Internal server error.
  */
 router.get("/overview", async function (req, res) {
-  database.getProjects()
+  database
+    .getProjects()
     .then((result) => {
       res.send(result);
     })
@@ -182,7 +142,13 @@ router.get("/overview", async function (req, res) {
     });
 });
 
-// project search endpoint 
+router.options("/search/:search", function (req, res) {
+  res.header("Allow", "GET,OPTIONS");
+  res.status(200).send();
+});
+
+
+// project search endpoint
 /**
  * @swagger
  * /project/search/{search}:
@@ -207,7 +173,8 @@ router.get("/overview", async function (req, res) {
  *         description: Internal server error.
  */
 router.get("/search/:search", async function (req, res) {
-  database.getProjectsBySearch(req.params.search)
+  database
+    .getProjectsBySearch(req.params.search)
     .then((result) => {
       res.send(result);
     })
@@ -218,3 +185,43 @@ router.get("/search/:search", async function (req, res) {
 
 module.exports = router;
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Project:
+ *       type: object
+ *       properties:
+ *         ID:
+ *           type: integer
+ *         userid:
+ *           type: integer
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         vidlink:
+ *           type: string
+ *         moretext:
+ *           type: string
+ *         lastedit:
+ *           type: integer
+ *         creationdate:
+ *           type: integer
+ *     ProjectInput:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         vidlink:
+ *           type: string
+ *         moretext:
+ *           type: string
+ *
+ *     ProjectList:
+ *       type: array
+ *       items:
+ *         $ref: '#/components/schemas/Project'
+ */

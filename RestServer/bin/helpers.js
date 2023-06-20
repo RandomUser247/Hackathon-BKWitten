@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
-const saltround = 10;
-
+const {saltround} = require("./config.json");
 const database = require("./db/databaseInteractor.js");
+const { log, error } = require("console");
+
 
 // basic encrytion
 function encrypt(password) {
@@ -30,11 +31,11 @@ function comparePasswords(req, res, next) {
       next();
     })
     .catch((error) => {
-      console.error(error);
+      error(error);
       res.status(500).send("An error occurred during login");
     });
 }
 
 
 
-module.exports = { comparePasswords, encrypt };
+module.exports = { comparePasswords, encrypt};

@@ -1,14 +1,39 @@
-var sqlite3 = require("sqlite3").verbose();
-var bcrypt = require("bcrypt");
-const { log } = require("console");
+const sqlite3 = require("sqlite3").verbose();
+const bcrypt = require("bcrypt");
+const { log, error } = require("console");
 const run = require("./migrationv1");
-const { get } = require("http");
+const { saltround } = require("../../bin/config.json");
 
 // database instance #######################################################
-var db = new sqlite3.Database("./bin/db/test.db");
-const saltround = 10;
+const db =
+initializeDatabase();
 
-const passhashQuery = "SELECT hashpass FROM users WHERE email = ?";
+/**
+ * initialize database
+ * @throws Error
+ * @async 
+ * @name initializeDatabase
+ * @description
+ * checks if database exists, if not, tries to create it
+  */
+async function initializeDatabase() {
+  if (require("fs").existsSync("./bin/db/test.db")) {
+      log("Database accessible");
+    return new sqlite3.Database("./bin/db/test.db");
+  } else {
+      log("Database not accessible, trying to build...");
+    if (await run()) {
+      log("Database created!");
+      return new sqlite3.Database("./bin/db/test.db");
+    } else {
+      error("CRITICAL: Database couldn't be accessed or created.");
+      throw new Error("Database couldn't be accessed or created.");
+    }
+  }
+}
+
+
+
 
 /**
  * wrapper function to run a query and return the result
@@ -21,7 +46,7 @@ async function runQuery(func, statement, params) {
   try {
     return await runQueryPromise(func, statement, params);
   } catch (error) {
-    console.log(error);
+      log(error);
   }
 }
 
@@ -37,7 +62,7 @@ async function runQueryPromise(func, statement, params) {
   return new Promise((resolve, reject) => {
     db[func](statement, params, function (err, result) {
       if (err) {
-        console.log(err);
+          log(err);
         reject(err);
         return;
       }

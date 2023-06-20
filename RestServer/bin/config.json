@@ -1,0 +1,44 @@
+{
+  "port": 8080,
+  "logging": {
+    "enabled": true,
+    "level": "info",
+    "filename": "server.log"
+  },
+  "database": {
+    "client": "sqlite3",
+    "connection": {
+      "filename": "./bin/db/test.db",
+      "saltrounds": 10
+    },
+    "migrations": {
+      "tableName": "knex_migrations",
+      "directory": "./bin/db"
+    }
+  },
+  "session": {
+    "resave": false,
+    "saveUninitialized": false,
+    "secret": "shhhh, very secret"
+  },
+  "swaggerOptions": {
+    "swaggerDefinition": {
+      "openapi": "3.0.0",
+      "info": {
+        "title": "Backend API",
+        "version": "1.0.0",
+        "description": "Backend API for the project",
+        "license": {
+          "name": "MIT",
+          "url": "https://spdx.org/licenses/MIT.html"
+        }
+      },
+      "servers": [
+        {
+          "url": "http://localhost:8080/api"
+        }
+      ]
+    },
+    "apis": ["./routes/*.js"]
+  }
+}
