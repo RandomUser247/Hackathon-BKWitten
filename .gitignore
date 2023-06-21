@@ -44,3 +44,16 @@ Thumbs.db
 *.db
 **/db/data
 
+**/.angular
+**/.git
+**/.gitignore
+**/.gitkeep
+**/.hg
+**/.hgignore
+**/.hgkeep
+**/.svn
+**/.DS_Store
+**/thumbs.db
+**/node_modules
+**/db/data
+*.db
