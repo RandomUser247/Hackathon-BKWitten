@@ -5,11 +5,9 @@ const upload = multer({ dest: "uploads/" }); // Define the destination folder fo
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const path = require("path");
-var database = require("../bin/db/databaseInteractor")
+var database = require("../bin/db/databaseInteractor");
 const { isOwner } = require("../bin/middleware");
 const { uploadFolder } = require("../bin/config");
-
-
 
 /**
  * @swagger
@@ -47,9 +45,11 @@ router.put(
 
       if (insertResult) {
         // File inserted successfully
-        res
-          .status(200)
-          .json({ success: true, message: "Image uploaded successfully", imageid: insertResult.id });
+        res.status(200).json({
+          success: true,
+          message: "Image uploaded successfully",
+          imageid: insertResult.id,
+        });
       } else {
         // Failed to insert file into the database
         res
@@ -94,19 +94,11 @@ router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
   const id = req.params.id;
 
   // Retrieve the image filepath from the database
-  const selectQuery = "SELECT filepath FROM media WHERE id = ?";
-  db.get(selectQuery, [id], function (err, row) {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Internal Server Error");
-      return;
-    }
-
+  database.getPath(id).then((row) => {
     if (!row) {
       res.status(404).send("Image not found");
       return;
     }
-
     const filepath = row.filepath;
 
     // Delete the image from the file system
@@ -116,22 +108,19 @@ router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
         res.status(500).send("Internal Server Error");
         return;
       }
-
       // Delete the image from the database
-      const deleteQuery = "DELETE FROM media WHERE id = ?";
-      db.run(deleteQuery, [id], function (err) {
-        if (err) {
-          console.error(err);
+      database
+        .deleteFile(id)
+        .then((result) => {
+          res.status(200).send("Image deleted successfully");
+        })
+        .catch((error) => {
           res.status(500).send("Internal Server Error");
           return;
-        }
-
-        res.status(200).send("Image deleted successfully");
-      });
+        });
     });
   });
 });
-
 
 /**
  * @swagger
@@ -162,7 +151,8 @@ router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
 router.get("/:id(\\d+)", function (req, res) {
   const id = req.params.id;
   // Retrieve the image details from the database
-  database.getPath(id)
+  database
+    .getPath(id)
     .then((imageDetails) => {
       if (!imageDetails) {
         res.status(404).send("Image not found");
@@ -195,24 +185,20 @@ router.get("/:id(\\d+)", function (req, res) {
  *       404:
  *         description: Image not found.
  *       500:
- *         description: Internal server error. 
+ *         description: Internal server error.
  */
 router.get("/own", function (req, res) {
   const id = req.session.user.id;
   // Retrieve the image details from the database
-  database.getPath(id)
-  .then((imageDetails) => {
-      res.send({imageDetails});
-  })
-  .catch((error) => {
+  database
+    .getPath(id)
+    .then((imageDetails) => {
+      res.send({ imageDetails });
+    })
+    .catch((error) => {
       console.error(error);
       res.status(500).send("Internal Server Error");
-  }
-  );
+    });
 });
-
-
-
-
 
 module.exports = router;

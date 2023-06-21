@@ -6,25 +6,8 @@ var helpers = require("../bin/helpers");
 var database = require("../bin/db/databaseInteractor");
 const { log } = require("console");
 const val = require("../bin/validators");
-const { authenticate, saveSession} = require("../bin/middleware");
+const { authenticate, saveSession } = require("../bin/middleware");
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     LoginRequest:
- *       type: object
- *       properties:
- *         email:
- *           type: string
- *           description: The user's email address.
- *         password:
- *           type: string
- *           description: The user's password.
- *       required:
- *         - email
- *         - password
- */
 /**
  * @swagger
  * /auth:
@@ -47,7 +30,13 @@ const { authenticate, saveSession} = require("../bin/middleware");
  */
 router.post(
   "/",
-  [val.checkNotLogin, val.validateEmail, val.validatePassword, authenticate, saveSession],
+  [
+    val.checkNotLogin,
+    val.validateEmail,
+    val.validatePassword,
+    authenticate,
+    saveSession,
+  ],
   async function (req, res) {
     res.status(200).json({ message: "Login successful" });
   }
@@ -85,21 +74,7 @@ router.delete("/", function (req, res) {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               email:
- *                  type: string
- *                  description: user email for verification purposes
- *               password:
- *                 type: string
- *                 description: Current password.
- *               newPassword:
- *                 type: string
- *                 description: New password.
- *             required:
- *               - password
- *               - newPassword
- *               - email
+ *            $ref: '#/components/schemas/ChangePasswordRequest'
  *     responses:
  *       200:
  *         description: Password updated successfully.
@@ -140,6 +115,37 @@ router.put(
   }
 );
 
-//middleware functions for email and password validation
-
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ChangePasswordRequest:
+ *       type: object
+ *       properties:
+ *         email:
+ *            type: string
+ *            description: user email for verification purposes
+ *         password:
+ *           type: string
+ *           description: Current password.
+ *         newPassword:
+ *           type: string
+ *           description: New password.
+ *       required:
+ *         - password
+ *         - newPassword
+ *         - email
+ *     LoginRequest:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: The user's email address.
+ *         password:
+ *           type: string
+ *           description: The user's password.
+ *       required:
+ *         - email
+ *         - password
+ */
 module.exports = router;

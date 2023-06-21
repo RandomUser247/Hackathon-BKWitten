@@ -3,15 +3,11 @@ var router = express.Router();
 var database = require("../bin/db/databaseInteractor");
 const val = require("../bin/validators");
 
-
-
-
 // project endpoint
-router.options( "/:id\\d+", function (req, res) {
+router.options("/:id\\d+", function (req, res) {
   res.header("Allow", "GET,POST,OPTIONS");
   res.status(200).send();
 });
-
 
 /**
  * @swagger
@@ -114,7 +110,6 @@ router.options("/overview", function (req, res) {
   res.status(200).send();
 });
 
-
 /**
  * @swagger
  * /project/overview:
@@ -146,7 +141,6 @@ router.options("/search/:search", function (req, res) {
   res.header("Allow", "GET,OPTIONS");
   res.status(200).send();
 });
-
 
 // project search endpoint
 /**

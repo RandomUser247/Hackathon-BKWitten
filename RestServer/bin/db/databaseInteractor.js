@@ -5,23 +5,22 @@ const run = require("./migrationv1");
 const { saltround } = require("../../bin/config.json");
 
 // database instance #######################################################
-const db =
-initializeDatabase();
+const db = initializeDatabase();
 
 /**
  * initialize database
  * @throws Error
- * @async 
+ * @async
  * @name initializeDatabase
  * @description
  * checks if database exists, if not, tries to create it
-  */
+ */
 async function initializeDatabase() {
   if (require("fs").existsSync("./bin/db/test.db")) {
-      log("Database accessible");
+    log("Database accessible");
     return new sqlite3.Database("./bin/db/test.db");
   } else {
-      log("Database not accessible, trying to build...");
+    log("Database not accessible, trying to build...");
     if (await run()) {
       log("Database created!");
       return new sqlite3.Database("./bin/db/test.db");
@@ -31,9 +30,6 @@ async function initializeDatabase() {
     }
   }
 }
-
-
-
 
 /**
  * wrapper function to run a query and return the result
@@ -46,10 +42,9 @@ async function runQuery(func, statement, params) {
   try {
     return await runQueryPromise(func, statement, params);
   } catch (error) {
-      log(error);
+    log(error);
   }
 }
-
 
 /**
  * generic function to run a query and return the promise
@@ -62,7 +57,7 @@ async function runQueryPromise(func, statement, params) {
   return new Promise((resolve, reject) => {
     db[func](statement, params, function (err, result) {
       if (err) {
-          log(err);
+        log(err);
         reject(err);
         return;
       }
@@ -105,19 +100,15 @@ async function getUserID(email) {
   return runQuery("get", useridQuery, [email]);
 }
 
-
 /**
  *  get project of user by id
  * @param {int} userid
  * @returns Promise
  */
 async function getUserProject(userid) {
-  const userProjectQuery =
-    "SELECT * FROM projects WHERE userid = ?";
+  const userProjectQuery = "SELECT * FROM projects WHERE userid = ?";
   return runQuery("get", userProjectQuery, [userid]);
 }
-
-
 
 /**
  *Insert updated projectdata in database and return success
@@ -141,18 +132,16 @@ async function updateProject(projectid, project) {
   });
 }
 
-
 /**
  * try to get project by id and return project object
  * @param {int} projectid
  * @returns Promise
  * @throws Error
-  */
+ */
 async function getProject(projectid) {
   const projectQuery = "SELECT * FROM projects WHERE id = ?";
   return runQuery("get", projectQuery, [projectid]);
 }
-
 
 /**
  * return all stored projects
@@ -165,19 +154,20 @@ async function getProjects() {
 
 /**
  * insert filepath of media into database
- * @param {string} filename 
- * @param {string} filepath 
- * @returns 
+ * @param {string} filename
+ * @param {string} filepath
+ * @returns
  */
 async function insertMedia(filename, filepath) {
-  const insertMediaQuery = "INSERT INTO media (filename, filepath) VALUES (?, ?)";
+  const insertMediaQuery =
+    "INSERT INTO media (filename, filepath) VALUES (?, ?)";
   return runQuery("run", insertMediaQuery, [filename, filepath]);
 }
 
 /**
  * get filepath of media by id
- * @param {int} id 
- * @returns 
+ * @param {int} id
+ * @returns
  */
 async function getPath(id) {
   const filePathQuery = "SELECT FROM media filename, filepath WHERE ID = ?";
@@ -185,9 +175,24 @@ async function getPath(id) {
 }
 
 /**
+ * delete media by id
+ * @param {int} id
+ * @returns
+ * @throws Error
+ * @async
+ * @name deleteFile
+ * @description
+ * deletes media by id
+  */
+async function deleteFile(id) {
+  const deleteFileQuery = "DELETE FROM media WHERE id = ?";
+  return runQuery("run", deleteFileQuery, [id]);
+}
+
+/**
  * get owner id of project by id
- * @param {int} projectID 
- * @returns 
+ * @param {int} projectID
+ * @returns
  */
 async function getOwnerID(projectID) {
   const ownerQuery = "SELECT userid FROM projects WHERE id = ?";
@@ -196,7 +201,7 @@ async function getOwnerID(projectID) {
 
 /**
  * get password of user by email
- * @param {string} email 
+ * @param {string} email
  * @returns
  */
 async function getUserPassword(email) {
@@ -216,7 +221,6 @@ async function getProjectsBySearch(search) {
   return runQuery("all", searchQuery, ["%" + search + "%", "%" + search + "%"]);
 }
 
-
 module.exports = {
   getUserByEmail,
   getUserID,
@@ -230,4 +234,5 @@ module.exports = {
   insertMedia,
   getUserProject,
   getProjectsBySearch,
+  deleteFile,
 };
