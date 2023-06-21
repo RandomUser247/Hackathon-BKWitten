@@ -8,6 +8,7 @@ function authenticate(req, res, next) {
     database
         .getUserByEmail(email)
         .then((user) => {
+            log(user)
             if (!user) {
                 res.status(406).send("Wrong credentials");
                 return;
@@ -19,7 +20,7 @@ function authenticate(req, res, next) {
                         res.status(406).send("Wrong credentials");
                         return;
                     }
-                    req.session.user = { id: user.id, email: user.email };
+                    req.session.user = { id: user.ID, email: user.email };
                     next();
                 })
                 .catch((err) => {

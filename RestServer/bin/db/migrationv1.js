@@ -16,7 +16,7 @@ async function run() {
         );
         console.log("USER TABLE CREATED");
         db.run(
-          "CREATE TABLE IF NOT EXISTS media (ID INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL, projectid INTEGER, filename VARCHAR(255), filepath VARCHAR(255),\
+          "CREATE TABLE IF NOT EXISTS media (ID INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL, projectid INTEGER, filename VARCHAR(255), filepath VARCHAR(255), isbanner INTEGER DEFAULT 0 CHECK (isbanner IN (0, 1)) \
                     FOREIGN KEY(projectid) REFERENCES projects(ID))"
         );
         console.log("MEDIA TABLE CREATED");

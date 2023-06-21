@@ -8,7 +8,7 @@
   "database": {
     "client": "sqlite3",
     "connection": {
-      "filename": "./bin/db/test.db",
+      "dbRelativePath": "./bin/db/test.db",
       "saltrounds": 10
     },
     "migrations": {
@@ -35,7 +35,22 @@
       },
       "servers": [
         {
-          "url": "http://localhost:8080/api"
+          "url": "http://localhost:8080/api",
+          "description": "Development server",
+          "variables": {
+            "port": {
+              "default": "8080"
+            }
+          }
+        },
+        {
+          "url": "https://hackathon.bkwitten.de/api",
+          "description": "Production server",
+          "variables": {
+            "port": {
+              "default": "8888"
+            }
+          }
         }
       ]
     },

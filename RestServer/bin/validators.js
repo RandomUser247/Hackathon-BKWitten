@@ -11,7 +11,7 @@ const session = require("express-session");
  * @description
  * This function checks if a user is logged in.
  */
-function checklogin(req, res, next) {
+function checkLogin(req, res, next) {
   if (req.session.user) {
     next();
   } else {
@@ -175,7 +175,7 @@ module.exports = {
   validateNewPassword,
   validateCurrentPassword,
   validateProject,
-  checklogin,
+  checkLogin,
   checkNotLogin,
   validateProjectID,
 };

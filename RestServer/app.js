@@ -1,23 +1,23 @@
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var session = require("express-session");
-const swaggerUi = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const session = require("express-session");
 const config = require("./bin/config");
 
-const specs = swaggerJsDoc(config.swaggerOptions);
 
-var app = express();
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var mediaRouter = require("./routes/media");
-var projectRouter = require("./routes/projects");
-var authRouter = require("./routes/auth");
 
+const app = express();
+
+// view engine setup ########################################################
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const mediaRouter = require("./routes/media");
+const projectRouter = require("./routes/projects");
+const authRouter = require("./routes/auth");
+
+// app.use #################################################################
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,7 +36,7 @@ apiRouter.use("/auth", authRouter);
 app.use("/api", apiRouter);
 
 // express static files #####################################################
-app.use(express.static(path.join(__dirname, "public/images")));
+
 
 // server instance ######################################################
 

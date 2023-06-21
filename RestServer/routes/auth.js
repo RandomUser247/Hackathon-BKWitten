@@ -23,6 +23,10 @@ const { authenticate, saveSession } = require("../bin/middleware");
  *     responses:
  *       200:
  *         description: Successful login. User is redirected to the home page.
+ *       400: 
+ *         description: Invalid request. Missing email or password.
+ *       401:
+ *         description: Unauthorized. Wrong credentials provided.
  *       406:
  *         description: Wrong credentials provided.
  *       500:
@@ -56,9 +60,10 @@ router.delete("/", function (req, res) {
   req.session.destroy((err) => {
     if (err) {
       console.error("ERROR destroying session: ", err);
+      return res.status(500).json({ message: "Internal error" });
     }
     req.session = null;
-    res.send("Logout sucessfull");
+    return res.status(200).json({ message: "Logout successful" });
   });
 });
 
@@ -88,7 +93,7 @@ router.delete("/", function (req, res) {
 router.put(
   "/",
   [
-    val.checklogin,
+    val.checkLogin,
     val.validateEmail,
     val.validatePassword,
     helpers.comparePasswords,
@@ -96,6 +101,7 @@ router.put(
   async function (req, res) {
     // Get the user's current password and new password from the request body
     const { password, newPassword, email } = req.body;
+    log(req.session.user)
     try {
       database
         .changePassword(req.session.user.id, newPassword)

@@ -26,8 +26,30 @@ const { uploadFolder } = require("../bin/config");
  *     responses:
  *       200:
  *         description: Image uploaded successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 imageid:
+ *                   type: integer
+ *       401:
+ *          description: Unauthorized.
  *       500:
  *         description: Failed to upload image or internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
  */
 router.put(
   "/",
@@ -36,6 +58,7 @@ router.put(
   async function (req, res, next) {
     try {
       const file = req.file;
+
       // Get the uploaded file details
       const filename = `${uuidv4()}.${file.originalname.split(".").pop()}`;
       const filepath = path.join(uploadFolder, filename);
