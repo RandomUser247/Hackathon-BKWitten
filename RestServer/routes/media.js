@@ -9,6 +9,7 @@ var database = require("../bin/db/databaseInteractor");
 const { isOwner } = require("../bin/middleware");
 const { uploadFolder } = require("../bin/config");
 
+
 /**
  * @swagger
  * /media:
