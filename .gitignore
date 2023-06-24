@@ -11,3 +11,5 @@
 **/node_modules
 **/db/data
 *.db
+
+**/uploads/*
