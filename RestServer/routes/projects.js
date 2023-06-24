@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var database = require("../bin/db/databaseInteractor");
+const { checkAdmin, checkLogin } = require("../bin/middleware");
 const val = require("../bin/validators");
 
 // project endpoint
@@ -84,7 +85,7 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
  *       405:
  *         description: Internal server error.
  */
-router.post("/:id", [val.validateProjectID], async function (req, res) {
+router.post("/:id", [checkLogin, val.validateProjectID], async function (req, res) {
   // validate body data
   var params = req.body;
   var err = "";

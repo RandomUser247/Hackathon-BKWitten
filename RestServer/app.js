@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const session = require("express-session");
 const config = require("./bin/config");
-
+const { checkLogin, checkAdmin } = require("./bin/middleware");
 
 
 
@@ -16,6 +16,7 @@ const usersRouter = require("./routes/users");
 const mediaRouter = require("./routes/media");
 const projectRouter = require("./routes/projects");
 const authRouter = require("./routes/auth");
+const adminRouter = require("./routes/admin");
 
 // app.use #################################################################
 app.use(logger("dev"));
@@ -33,9 +34,9 @@ apiRouter.use("/users", usersRouter);
 apiRouter.use("/project", projectRouter);
 apiRouter.use("/media", mediaRouter);
 apiRouter.use("/auth", authRouter);
+apiRouter.use("/admin", [checkLogin, checkAdmin], adminRouter);
 app.use("/api", apiRouter);
 
-// express static files #####################################################
 
 
 // server instance ######################################################

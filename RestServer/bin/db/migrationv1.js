@@ -6,7 +6,7 @@ async function run() {
     try {
       db.serialize(() => {
         db.run(
-          "CREATE TABLE IF NOT EXISTS users (ID INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL, email VARCHAR(50), hashpass TEXT)"
+          "CREATE TABLE IF NOT EXISTS users (ID INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL, email VARCHAR(50), name VARCHAR(16) NOT NULL hashpass TEXT NOT NULL, isadmin INTEGER DEFAULT 0 CHECK (isadmin IN (0, 1)))"
         );
         console.log("USER TABLE CREATED");
         db.run(

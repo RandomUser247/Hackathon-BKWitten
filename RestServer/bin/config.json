@@ -1,5 +1,6 @@
 {
   "port": 8080,
+  "uploadFolder": "./uploads",
   "logging": {
     "enabled": true,
     "level": "info",

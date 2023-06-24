@@ -43,4 +43,7 @@ Thumbs.db
 
 *.db
 **/db/data
-
+# every file in uploads folder
+**/uploads/*
+# every file in logs folder
+**/logs/*

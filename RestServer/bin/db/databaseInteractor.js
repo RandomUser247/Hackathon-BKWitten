@@ -92,7 +92,7 @@ async function getUserByEmail(email) {
   const getUserbyEmailQuery = "SELECT * FROM users WHERE email = ?"; //returns all user data
   return runQuery("get", getUserbyEmailQuery, [email]);
 }
-
+// TODO: getUserByEmail should return also projectID and projectTitle
 /**
  *  get userID by Email
  * @param {string} email
@@ -218,15 +218,15 @@ async function getProjects() {
 }
 
 /**
- * insert filepath of media into database
+ * insert filepath of media into database where projectid is retrieved from projects table where userid is userid
  * @param {string} filename
  * @param {string} filepath
  * @returns
  */
-async function insertMedia(projectid, filename, filepath) {
+async function insertMedia(userid, filename, filepath) {
   const insertMediaQuery =
-    "INSERT INTO media (projectid, filename, filepath) VALUES (?, ?, ?)";
-  return runQuery("run", insertMediaQuery, [projectid, filename, filepath]);
+    "INSERT INTO media (projectid, filename, filepath) VALUES ((SELECT id FROM projects WHERE userid = ?), ?, ?)";
+  return runQuery("run", insertMediaQuery, [userid, filename, filepath]);
 }
 
 async function insertBanner(projectid, filename, filepath) {

@@ -6,8 +6,9 @@ const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const path = require("path");
 var database = require("../bin/db/databaseInteractor");
-const { isOwner } = require("../bin/middleware");
+const { isOwner, checkLogin } = require("../bin/middleware");
 const { uploadFolder } = require("../bin/config");
+const { log } = require("console");
 
 
 /**
@@ -16,12 +17,16 @@ const { uploadFolder } = require("../bin/config");
  *   put:
  *     summary: Uploads an image.
  *     tags: [Media]
- *     parameters:
- *       - in: formData
- *         name: image
- *         required: true
- *         description: The image file to upload.
- *         type: file
+ *     requestBody:
+ *       required: true
+ *       content:
+ *        multipart/form-data:
+ *         schema:
+ *           type: object
+ *           properties:
+ *             image:
+ *               type: string
+ *               format: binary
  *     security:
  *       - BearerAuth: []
  *     responses:
@@ -54,8 +59,9 @@ const { uploadFolder } = require("../bin/config");
  */
 router.put(
   "/",
+  [checkLogin,
   isOwner,
-  upload.single("image"),
+  upload.single("image"),],
   async function (req, res, next) {
     try {
       const file = req.file;
@@ -63,9 +69,9 @@ router.put(
       // Get the uploaded file details
       const filename = `${uuidv4()}.${file.originalname.split(".").pop()}`;
       const filepath = path.join(uploadFolder, filename);
-
+      const userid = req.session.user.id;
       // Insert the file details into the database
-      const insertResult = await database.insertToDB(filename, filepath);
+      const insertResult = await database.insertMedia(userid, filename, filepath);
 
       if (insertResult) {
         // File inserted successfully
