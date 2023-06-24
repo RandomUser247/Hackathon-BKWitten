@@ -8,31 +8,6 @@ const session = require("express-session");
  * @param {*} res
  * @param {*} next
  * @returns
- * @description
- * This function checks if a user is logged in.
- */
-function checkLogin(req, res, next) {
-  if (req.session.user) {
-    next();
-  } else {
-    res.status(401).send("Unauthorized access");
-  }
-}
-
-function checkNotLogin(req, res, next) {
-  if (req.session.user) {
-    res.status(401).send("Already logged in");
-  } else {
-    next();
-  }
-}
-
-/**
- *
- * @param {*} req
- * @param {*} res
- * @param {*} next
- * @returns
  */
 function validatePassword(req, res, next) {
   const { password } = req.body;
@@ -120,8 +95,6 @@ function validateCurrentPassword(req, res, next) {
   next();
 }
 
-
-
 /**
  *
  * @param {*} req
@@ -147,7 +120,7 @@ function validateProject(req, res, next) {
 }
 
 /**
- * 
+ *
  * @param {session.req} req
  * @param {*} res
  * @param {*} next
@@ -157,17 +130,15 @@ function validateProject(req, res, next) {
  * A valid project ID is a number greater than 0.
  */
 function validateProjectID(req, res, next) {
-    const id_ = req.params.id;
-    if (!id_) {
-        return res.status(400).json({ message: "Project ID is required" });
-    }
-    if (!validator.isInt(id_, { min: 1 })) {
-        return res.status(400).json({ message: "Invalid project ID" });
-    }
-    next();
+  const id_ = req.params.id;
+  if (!id_) {
+    return res.status(400).json({ message: "Project ID is required" });
+  }
+  if (!validator.isInt(id_, { min: 1 })) {
+    return res.status(400).json({ message: "Invalid project ID" });
+  }
+  next();
 }
-
-
 
 module.exports = {
   validatePassword,
@@ -175,7 +146,5 @@ module.exports = {
   validateNewPassword,
   validateCurrentPassword,
   validateProject,
-  checkLogin,
-  checkNotLogin,
   validateProjectID,
 };

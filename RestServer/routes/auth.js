@@ -5,8 +5,19 @@ var bcrypt = require("bcrypt");
 var helpers = require("../bin/helpers");
 var database = require("../bin/db/databaseInteractor");
 const { log } = require("console");
-const val = require("../bin/validators");
-const { authenticate, saveSession } = require("../bin/middleware");
+const {
+  validateEmail,
+  validatePassword,
+  validateCurrentPassword,
+  validateNewPassword,
+} = require("../bin/validators");
+const {
+  authenticate,
+  saveSession,
+  checkLogin,
+  checkNotLogin,
+  comparePasswords,
+} = require("../bin/middleware");
 
 /**
  * @swagger
@@ -23,7 +34,7 @@ const { authenticate, saveSession } = require("../bin/middleware");
  *     responses:
  *       200:
  *         description: Successful login. User is redirected to the home page.
- *       400: 
+ *       400:
  *         description: Invalid request. Missing email or password.
  *       401:
  *         description: Unauthorized. Wrong credentials provided.
@@ -35,9 +46,9 @@ const { authenticate, saveSession } = require("../bin/middleware");
 router.post(
   "/",
   [
-    val.checkNotLogin,
-    val.validateEmail,
-    val.validatePassword,
+    checkNotLogin,
+    validateEmail,
+    validatePassword,
     authenticate,
     saveSession,
   ],
@@ -93,15 +104,15 @@ router.delete("/", function (req, res) {
 router.put(
   "/",
   [
-    val.checkLogin,
-    val.validateEmail,
-    val.validatePassword,
-    helpers.comparePasswords,
+    checkLogin,
+    validateEmail,
+    validatePassword,
+    comparePasswords,
   ],
   async function (req, res) {
     // Get the user's current password and new password from the request body
     const { password, newPassword, email } = req.body;
-    log(req.session.user)
+    log(req.session.user);
     try {
       database
         .changePassword(req.session.user.id, newPassword)

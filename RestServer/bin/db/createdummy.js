@@ -7,11 +7,11 @@ const TIME = new Date();
 console.log(TIME.getTime());
 
 const usersData = [
-  { useremail: "admin@school.de", password: "password" },
-  { useremail: "Rob@school.de", password: "password" },
-  { useremail: "Memo@school.de", password: "password" },
-  { useremail: "Jonas@woboda.de", password: "password" },
-  { useremail: "some@dude.de", password: "wordpass" },
+  { useremail: "admin@school.de", password: "password", isadmin: 1 },
+  { useremail: "Rob@school.de", password: "password", isadmin: 0 },
+  { useremail: "Memo@school.de", password: "password", isadmin: 0 },
+  { useremail: "Jonas@woboda.de", password: "password", isadmin: 0 },
+  { useremail: "some@dude.de", password: "wordpass", isadmin: 0 },
 ];
 
 const projectData = [
@@ -62,7 +62,7 @@ const projectData = [
   },
 ];
 
-var insertUserQuery = "Insert INTO users (email, hashpass) VALUES (?, ?)";
+var insertUserQuery = "Insert INTO users (email, hashpass, isadmin) VALUES (?, ?, ?)";
 
 var insertProjectQuery =
   "INSERT INTO projects (userid, title, description, vidlink, moretext, lastedit, creationdate) VALUES ($userid, $title, $description, $vidlink, $moretext, $lastedit, $creationdate)";
@@ -74,7 +74,7 @@ const insertUsersAndProjects = () => {
         .encrypt(user.password)
         .then((hashedPassword) => {
           return new Promise((resolve, reject) => {
-            db.run(insertUserQuery, [user.useremail.toLowerCase(), hashedPassword], (err) => {
+            db.run(insertUserQuery, [user.useremail.toLowerCase(), hashedPassword, user.isadmin], (err) => {
               if (err) {
                 reject(err);
               } else {

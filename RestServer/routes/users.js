@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
-const { checkLogin } = require("../bin/validators");
 const database = require("../bin/db/databaseInteractor");
+const { checkAdmin, checkLogin } = require("../bin/middleware");
 
 /**
  * @swagger
