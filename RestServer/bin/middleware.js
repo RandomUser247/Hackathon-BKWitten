@@ -1,6 +1,8 @@
 const { log } = require("console");
 const { getUserByEmail, getOwnerID } = require("./db/databaseInteractor");
 const bcrypt = require("bcrypt");
+const FRONTEND_URL = require("./config.json").urls.frontend;
+const BACKEND_URL = require("./config.json").urls.backend;
 
 function authenticate(req, res, next) {
   const { email, password } = req.body;
@@ -19,6 +21,7 @@ function authenticate(req, res, next) {
             res.status(406).send("Wrong credentials");
             return;
           }
+          database.updateLastLogin(user.ID);
           req.session.user = { userid: user.ID, email: user.email };
           next();
         })
@@ -54,6 +57,12 @@ function saveSession(req, res, next) {
  * @param {*} req
  * @param {*} res
  * @param {*} next
+ * @returns
+ * @description
+ * This function checks if the user is the owner of the project.
+ * If the user is the owner, the next function is called.
+ * If the user is not the owner, the user is redirected to the login page.
+ * This function is used in the routes for the project page.
  */
 async function isOwner(req, res, next) {
   var userID = req.userid;
@@ -61,8 +70,29 @@ async function isOwner(req, res, next) {
   if (userID == (await getOwnerID(projectID))) {
     return next();
   }
-  res.redirect("http://localhost:4200/login");
+  res.redirect(FRONTEND_URL + "/login");
 }
+
+/**
+ * Checks if the user is activated
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
+ * @description
+ * This function checks if a user is activated.
+ * If the user is activated, the next function is called.
+ * If the user is not activated, the user is redirected to the registration page.
+ * This function is used in the routes for the login and the home page.
+ */
+async function isactivated(req, res, next) {
+    var activation = req.session.user.activated;
+    if (activation == 1) {
+        return next();
+    }
+    res.redirect(FRONTEND_URL + "/regristration");
+}
+
 
 /**
  *  Checks if the user is an admin

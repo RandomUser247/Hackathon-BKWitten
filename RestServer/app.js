@@ -42,7 +42,7 @@ app.use("/api", apiRouter);
 // server instance ######################################################
 
 var server = app.listen(config.port, function () {
-  console.log("Backend Application listening at http://localhost:8080");
+  console.log("Backend Application listening at " + config.urls.backend);
 });
 
 module.exports = app;

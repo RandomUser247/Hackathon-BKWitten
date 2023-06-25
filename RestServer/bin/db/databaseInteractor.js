@@ -68,14 +68,15 @@ async function runQueryPromise(func, statement, params) {
  * @returns
  */
 async function changePassword(userId, newPassword) {
-  
   var hash = await bcrypt.hash(newPassword, saltrounds);
   log(userId, newPassword, hash);
   const updapasswordQuery = "UPDATE users SET hashpass = ? WHERE ID = ?";
-  return runQuery("run", updapasswordQuery, [
-    hash,
-    userId,
-  ]);
+  return runQuery("run", updapasswordQuery, [hash, userId]);
+}
+
+async function updateLastLogin(userId) {
+  const updateLastLoginQuery = "UPDATE users SET lastlogin = ? WHERE ID = ?";
+  return runQuery("run", updateLastLoginQuery, [Date.now(), userId]);
 }
 
 /**
@@ -102,6 +103,8 @@ async function getUserID(email) {
   const useridQuery = "SELECT id FROM users WHERE email = ?";
   return runQuery("get", useridQuery, [email]);
 }
+
+
 
 /**
  *  get project and a list of all media filepaths of user by id
@@ -136,6 +139,15 @@ async function getUserProject(userid) {
     projects.userid = ?
 `;
   return runQuery("get", userProjectQuery, [userid]);
+}
+
+async function toggleProjectVisibility(projectid) {
+  const toggleProjectVisibilityQuery = `
+  UPDATE projects
+  SET visible = NOT visible
+  WHERE id = ?
+  `;
+  return runQuery("run", toggleProjectVisibilityQuery, [projectid]);
 }
 
 /**
@@ -218,6 +230,17 @@ async function getProjects() {
 }
 
 /**
+ * get projects by search string
+ * @param {string} search
+ * @returns Promise
+ */
+async function getProjectsBySearch(search) {
+  const searchQuery =
+    "SELECT * FROM projects WHERE title LIKE ? OR description LIKE ?";
+  return runQuery("all", searchQuery, ["%" + search + "%", "%" + search + "%"]);
+}
+
+/**
  * insert filepath of media into database where projectid is retrieved from projects table where userid is userid
  * @param {string} filename
  * @param {string} filepath
@@ -246,6 +269,16 @@ async function getPath(id) {
   return runQuery("get", filePathQuery, [id]);
 }
 
+/**
+ * get all filepaths of media by userid
+ * @param {int} userid
+ * @returns
+ * @throws Error
+ * @async
+ * @name getAllFilePathsByUserID
+ * @description
+ * get all filepaths of media by userid
+  */
 async function getAllFilePathsByUserID(userid) {
   const filePathQuery =
     "SELECT filepath, filename, isbanner FROM media JOIN projects ON media.projectid = projects.id WHERE projects.userid = ?";
@@ -298,30 +331,35 @@ async function getUserPassword(email) {
 }
 
 /**
- * get projects by search string
- * @param {string} search
- * @returns Promise
+ * sets activate variable of user to 1
+ * @param {int} id
+ * @returns
+ * @throws Error
+ * @async
+ * @name activateUser
+ * @description
+ * sets activate variable of user to 1
  */
-
-async function getProjectsBySearch(search) {
-  const searchQuery =
-    "SELECT * FROM projects WHERE title LIKE ? OR description LIKE ?";
-  return runQuery("all", searchQuery, ["%" + search + "%", "%" + search + "%"]);
+async function activateUser(id) {
+  const activateUserQuery = "UPDATE users SET activated = 1 WHERE id = ?";
+  return runQuery("run", activateUserQuery, [id]);
 }
 
 module.exports = {
   getUserByEmail,
   getUserID,
   updateProject,
+  toggleProjectVisibility,
   getProject,
   getProjects,
+  getUserProject,
+  getProjectsBySearch,
   getPath,
   getOwnerID,
   getUserPassword,
+  activateUser,
   changePassword,
   insertMedia,
-  getUserProject,
-  getProjectsBySearch,
   deleteFile,
   getAllFilePathsByUserID,
   getAllFilePathsByProjectID,

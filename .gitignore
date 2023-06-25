@@ -10,6 +10,7 @@
 **/thumbs.db
 **/node_modules
 **/db/data
+*.db
 # every file in uploads folder
 **/uploads/*
 # every file in logs folder

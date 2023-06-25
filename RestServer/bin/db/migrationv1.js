@@ -6,12 +6,15 @@ async function run() {
     try {
       db.serialize(() => {
         db.run(
-          "CREATE TABLE IF NOT EXISTS users (ID INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL, email VARCHAR(50), name VARCHAR(16) NOT NULL hashpass TEXT NOT NULL, isadmin INTEGER DEFAULT 0 CHECK (isadmin IN (0, 1)))"
+          "CREATE TABLE IF NOT EXISTS users (ID INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL, email VARCHAR(50), name VARCHAR(16) NOT NULL hashpass TEXT NOT NULL,\
+          lastlogin INTEGER DEFAULT 0, isadmin INTEGER DEFAULT 0 CHECK (isadmin IN (0, 1))\
+          isactivated INTEGER NOT NULL DEFAULT 0 CHECK(isactivated IN (0,1)))"
         );
         console.log("USER TABLE CREATED");
         db.run(
           "CREATE TABLE IF NOT EXISTS projects (ID INTEGER PRIMARY KEY ASC AUTOINCREMENT NOT NULL,\
-                    userid INTEGER, title VARCHAR(50), description TEXT, vidlink VARCHAR(255), moretext TEXT, lastedit INTEGER, creationdate INTEGER,\
+                    userid INTEGER, title VARCHAR(50), description TEXT, vidlink VARCHAR(255), moretext TEXT, lastedit INTEGER, creationdate INTEGER, \
+                    isvisible INTEGER NOT NULL DEFAULT 1 CHECK(isvisible IN (O,1)), \
                     FOREIGN KEY(userid) REFERENCES users(ID))"
         );
         console.log("USER TABLE CREATED");
