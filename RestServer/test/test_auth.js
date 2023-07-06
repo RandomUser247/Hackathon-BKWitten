@@ -1,82 +1,75 @@
 const request = require('supertest');
+const expect = require('expect');
 const app = require('../app');
 
 describe('Authentication Routes', () => {
   // Test case for the POST /auth route
-  describe('POST /auth', () => {
+  describe('POST /api/auth', () => {
     it('should authenticate user and return a successful response', async () => {
       const response = await request(app)
-        .post('/auth')
-        .send({ email: 'some@dude.de', password: 'password' });
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message', 'Login successful');
+        .post('/api/auth')
+        .send({ email: 'some@dude.de', password: 'password' })
+        .expect(200)
+        .expect({ message: 'Login successful' });
     });
 
     it('should return 400 if email or password is missing', async () => {
       const response = await request(app)
-        .post('/auth')
-        .send({ email: 'some@dude.de' }); // Missing password
-
-      expect(response.status).toBe(400);
+        .post('/api/auth')
+        .send({ email: 'some@dude.de' }) // Missing password
+        .expect(400);
     });
 
     it('should return 401 if wrong credentials are provided', async () => {
       const response = await request(app)
-        .post('/auth')
-        .send({ email: 'some@dude.de', password: 'wrongpassword' });
-
-      expect(response.status).toBe(401);
+        .post('/api/auth')
+        .send({ email: 'some@dude.de', password: 'wrongpassword' })
+        .expect(401);
     });
   });
 
   // Test case for the DELETE /auth route
-  describe('DELETE /auth', () => {
+  describe('DELETE /api/auth', () => {
     it('should log out the user and return a successful response', async () => {
-      const response = await request(app).delete('/auth');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message', 'Logout successful');
+      const response = await request(app).delete('/api/auth').expect(200);
+      expect(response.body).toEqual({ message: 'Logout successful' });
     });
   });
 
   // Test case for the PUT /auth route
-  describe('PUT /auth', () => {
+  describe('PUT /api/auth', () => {
     it('should update the user password and return a successful response', async () => {
       const response = await request(app)
-        .put('/auth')
+        .put('/api/auth')
         .send({
           email: 'some@dude.de',
           password: 'password',
           newPassword: 'passwort',
-        });
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message', 'Password updated successfully');
+        })
+        .expect(200)
+        .expect({ message: 'Password updated successfully' });
     });
 
     it('should return 400 if invalid current password or new password is provided', async () => {
       const response = await request(app)
-        .put('/auth')
+        .put('/api/auth')
         .send({
           email: 'some@dude.de',
           password: 'wrongpassword', // Invalid current password
           newPassword: 'short', // Invalid new password
-        });
-
-      expect(response.status).toBe(400);
+        })
+        .expect(400);
     });
 
     it('should return 401 if unauthorized or invalid current password is provided', async () => {
       const response = await request(app)
-        .put('/auth')
+        .put('/api/auth')
         .send({
           email: 'some@dude.de',
           password: 'wrongpassword', // Invalid current password
           newPassword: 'newpassword',
-        });
-
-      expect(response.status).toBe(401);
+        })
+        .expect(401);
     });
   });
 });

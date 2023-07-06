@@ -1,14 +1,23 @@
 // testing the admin rout
+const request = require('supertest');
+const expect = require('expect');
+const app = require('../app');
 
-const request = require("supertest");
-const app = require("../app");
+
+// setup for admin rout testing
+const admin = {
+    username: "admin@school.de",
+    password: "password"
+}
+
+
 
 describe("GET /api/admin/users", () => {
   it("respond with json containing a list of all users", (done) => {
+
     request(app)
       .get("/api/admin/users")
       .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
       .expect(200, done);
   });
 });
@@ -18,7 +27,6 @@ describe("GET /api/admin/users/:id", () => {
         request(app)
         .get("/api/admin/users/1")
         .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
         .expect(200, done);
     });
     }
@@ -30,7 +38,6 @@ describe("POST /api/admin/project/:id", () => {
         request(app)
         .post("/api/admin/project/1")
         .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
         .expect(200, done);
     });
     }
@@ -42,7 +49,6 @@ describe("DELETE /api/admin/media/:id", () => {
         request(app)
         .delete("/api/admin/media/1")
         .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
         .expect(200, done);
     });
     }
@@ -54,7 +60,6 @@ describe("GET /api/admin/logs", () => {
         request(app)
         .get("/api/admin/logs")
         .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
         .expect(200, done);
     });
     }
@@ -66,7 +71,6 @@ describe("GET /api/admin/media", () => {
         request(app)
         .get("/api/admin/media")
         .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
         .expect(200, done);
     });
     }

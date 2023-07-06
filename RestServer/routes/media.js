@@ -65,7 +65,7 @@ router.put(
   async function (req, res, next) {
     try {
       const file = req.file;
-
+      log(file);
       // Get the uploaded file details
       const filename = `${uuidv4()}.${file.originalname.split(".").pop()}`;
       const filepath = path.join(uploadFolder, filename);
