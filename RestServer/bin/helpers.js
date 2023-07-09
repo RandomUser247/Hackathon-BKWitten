@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { saltround } = require("./config.json");
+const { saltrounds } = require("./config.json").database.connection;
 const database = require("./db/databaseInteractor.js");
 const { log, error } = require("console");
 
@@ -7,12 +7,12 @@ const { log, error } = require("console");
 function encrypt(password) {
   return new Promise((resolve, reject) => {
     bcrypt
-      .hash(password, saltround)
+      .hash(password, saltrounds)
       .then((hash) => {
         resolve(hash);
       })
       .catch((e) => {
-        reject(error);
+        reject(e);
       });
   });
 }

@@ -1,5 +1,10 @@
-const { log } = require("console");
-const { getUserByEmail, getOwnerID } = require("./db/databaseInteractor");
+const { log, info } = require("console");
+const {
+  getUserByEmail,
+  getOwnerID,
+  updateLastLogin,
+  getUserPassword,
+} = require("./db/databaseInteractor");
 const bcrypt = require("bcrypt");
 const FRONTEND_URL = require("./config.json").urls.frontend;
 const BACKEND_URL = require("./config.json").urls.backend;
@@ -9,7 +14,6 @@ function authenticate(req, res, next) {
   console.log("authenticating");
   getUserByEmail(email)
     .then((user) => {
-      log(user);
       if (!user) {
         res.status(406).send("Wrong credentials");
         return;
@@ -21,7 +25,7 @@ function authenticate(req, res, next) {
             res.status(406).send("Wrong credentials");
             return;
           }
-          database.updateLastLogin(user.ID);
+          updateLastLogin(user.ID);
           req.session.user = { userid: user.ID, email: user.email };
           next();
         })
@@ -65,12 +69,24 @@ function saveSession(req, res, next) {
  * This function is used in the routes for the project page.
  */
 async function isOwner(req, res, next) {
-  var userID = req.userid;
+  var userID = req.session.user.userid;
   var projectID = req.params.id;
-  if (userID == (await getOwnerID(projectID))) {
-    return next();
-  }
-  res.redirect(FRONTEND_URL + "/login");
+
+  getOwnerID(projectID).then((row) => {
+    if (!row) {
+      res.redirect(FRONTEND_URL + "/login");
+    }
+    else if (userID == row["userid"]) {
+      log("User is owner");
+      next();
+    } else {
+      res.redirect(FRONTEND_URL + "/login");
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).send("Internal server error");
+  });
 }
 
 /**
@@ -86,13 +102,12 @@ async function isOwner(req, res, next) {
  * This function is used in the routes for the login and the home page.
  */
 async function isactivated(req, res, next) {
-    var activation = req.session.user.activated;
-    if (activation == 1) {
-        return next();
-    }
-    res.redirect(FRONTEND_URL + "/regristration");
+  var activation = req.session.user.activated;
+  if (activation == 1) {
+    return next();
+  }
+  res.redirect(FRONTEND_URL + "/regristration");
 }
-
 
 /**
  *  Checks if the user is an admin
@@ -103,7 +118,7 @@ async function isactivated(req, res, next) {
 async function checkAdmin(req, res, next) {
   try {
     const user = await getUserByEmail(req.session.user.email);
-    if (user.isAdmin == 1) {
+    if (user.isadmin == 1) {
       next();
     } else {
       res.status(401).send("Unauthorized access");
@@ -133,6 +148,7 @@ async function checkFileSize(req, res, next) {
  * This function checks if a user is logged in.
  */
 function checkLogin(req, res, next) {
+  info("Checking if user is logged in");
   if (req.session.user) {
     next();
   } else {
@@ -151,7 +167,7 @@ function checkNotLogin(req, res, next) {
 // check if password equals stored hash
 async function comparePasswords(req, res, next) {
   const { password, newPassword, email } = req.body;
-  var row = await database.getUserPassword(email);
+  var row = await getUserPassword(email);
   if (!row) {
     res.status(406).send("Wrong credentials");
     return;

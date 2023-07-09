@@ -103,20 +103,13 @@ function validateCurrentPassword(req, res, next) {
  * @returns
  */
 function validateProject(req, res, next) {
-  const { project } = req.body;
-  if (!project) {
-    return res.status(400).json({ message: "Project is required" });
+  const project = req.body;
+  if (!project || !project.title || !project.description ) {
+    return res.status(400).json({ message: "Invalid project" });
   }
-  if (!project.ID) {
-    return res.status(400).json({ message: "Project ID is required" });
-  }
-  if (!project.userid) {
-    return res.status(400).json({ message: "User ID is required" });
-  }
-  if (!project.title) {
-    return res.status(400).json({ message: "Project title is required" });
-  }
-  next();
+  else{
+    next();
+  } 
 }
 
 /**

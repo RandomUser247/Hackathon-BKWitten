@@ -35,13 +35,11 @@ const FRONTEND_URL = require("../bin/config.json").urls.frontend;
  *             $ref: '#/components/schemas/LoginRequest'
  *     responses:
  *       200:
- *         description: Successful login. User is redirected to the home page.
- *       303:
- *         description: Successful login. User is redirected to the registration page.
+ *         description: Successful login. User is redirected to the home page.{}
  *       400:
  *         description: Invalid request. Missing email or password.
  *       401:
- *         description: Unauthorized. Wrong credentials provided.
+ *         description: Already logged in.
  *       406:
  *         description: Wrong credentials provided.
  *       500:
@@ -59,11 +57,7 @@ router.post(
     saveSession,
   ],
   async function (req, res) {
-    if(req.session.user.activated == 1){
     res.status(200).json({ message: "Login successful" });
-    }else{
-      res.status(303).redirect(FRONTEND_URL + "/registration");
-    }
   }
 );
 
@@ -141,36 +135,6 @@ router.put(
     }
   }
 );
-
-// route after first login, to change password and activate the account
-// 
-router.put("/registration",[
-  checkLogin,
-  validateEmail,
-  validatePassword,
-  comparePasswords,
-], async function (req, res) {
-  // Get the user's current password and new password from the request body
-  const { password, newPassword, email } = req.body;
-  log(req.session.user);
-  try {
-    database
-      .changePassword(req.session.user.id, newPassword)
-      .then(() => {
-        return res
-          .status(200)
-          .json({ message: "Password updated successfully" });
-      })
-      .catch((err) => {
-        console.error(err);
-        return res.status(500).json({ message: "Internal error" });
-      });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal error" });
-  }
-});
-
 
 
 /**

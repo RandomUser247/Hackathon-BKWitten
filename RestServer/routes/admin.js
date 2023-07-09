@@ -7,6 +7,11 @@ router.get("/users", function (req, res) {
     }
 );
 
+router.get("/users/:id(\\d+)", function (req, res) {
+    res.status(200).json({"msg":"User data retrieved successfully"});
+    }
+);
+
 router.get("/logs", function (req, res) {
     res.status(200).json({"msg":"Logs retrieved successfully"});
     }

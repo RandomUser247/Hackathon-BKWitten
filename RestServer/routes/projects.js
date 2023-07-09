@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var database = require("../bin/db/databaseInteractor");
-const { checkAdmin, checkLogin } = require("../bin/middleware");
+const { checkAdmin, checkLogin, isOwner } = require("../bin/middleware");
 const val = require("../bin/validators");
 
 // project endpoint
@@ -45,7 +45,7 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
       res.status(404).send("project not found");
     }
     // send project data
-    res.status(200).json({ project: project });
+    else res.send({ project: project });
   } catch (err) {
     console.error(err);
     res.status(500).send("an internal error has occured");
@@ -78,6 +78,8 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
  *     responses:
  *       200:
  *         description: Project updated successfully.
+ *       401:
+ *         description: Unauthorized access.
  *       404:
  *         description: Bad request or project not found.
  *       406:
@@ -85,26 +87,25 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
  *       405:
  *         description: Internal server error.
  */
-router.post("/:id", [checkLogin, val.validateProjectID], async function (req, res) {
-  // validate body data
-  var params = req.body;
-  var err = "";
-  if (params.title) {
-    if (params.title.trim().length < 5) {
-      err += "you need a title at least 5 characters long \n";
-      res.status(406).send(err);
-      return;
-    }
+router.post(
+  "/:id",
+  [checkLogin, val.validateProjectID, val.validateProject, isOwner],
+  async function (req, res) {
+    // validate body data
+    var params = req.body;
+    var err = "";
+    console.log("initiating project update");
+    database
+      .updateProject(req.params.id, req.body)
+      .then((result) => {
+        console.log("successful project update");
+        res.send("SUCCESS");
+      })
+      .catch((err) => {
+        res.status(405).send("internal error occured");
+      });
   }
-  database
-    .updateProject(req.params.id, req.body)
-    .then((result) => {
-      res.send("SUCCESS");
-    })
-    .catch((err) => {
-      res.status(405).send("internal error occured");
-    });
-});
+);
 
 router.options("/overview", function (req, res) {
   res.header("Allow", "GET,OPTIONS");

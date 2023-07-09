@@ -1,3 +1,5 @@
+
+
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -5,28 +7,35 @@ const upload = multer({ dest: "uploads/" }); // Define the destination folder fo
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const path = require("path");
-var database = require("../bin/db/databaseInteractor");
-const { isOwner, checkLogin } = require("../bin/middleware");
-const { uploadFolder } = require("../bin/config");
+var sqlite3 = require("sqlite3").verbose();
+var db = new sqlite3.Database("./bin/db/test.db");
 const { log } = require("console");
+const { checkLogin, isOwner } = require("../bin/middleware");
 
+router.use("/", express.static("./public/images"));
+/**
+ * @openapi
+ * basePath: /api
+ */
 
 /**
  * @swagger
- * /media:
+ * /media/{id}:
  *   put:
  *     summary: Uploads an image.
  *     tags: [Media]
- *     requestBody:
- *       required: true
- *       content:
- *        multipart/form-data:
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the image.
  *         schema:
- *           type: object
- *           properties:
- *             image:
- *               type: string
- *               format: binary
+ *           type: integer
+ *       - in: formData
+ *         name: image
+ *         required: true
+ *         description: The image file to upload.
+ *         type: file
  *     security:
  *       - BearerAuth: []
  *     responses:
@@ -147,7 +156,7 @@ router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
         .catch((error) => {
           res.status(500).send("Internal Server Error");
           return;
-        });
+      });
     });
   });
 });
@@ -181,8 +190,7 @@ router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
 router.get("/:id(\\d+)", function (req, res) {
   const id = req.params.id;
   // Retrieve the image details from the database
-  database
-    .getPath(id)
+  getPath(id)
     .then((imageDetails) => {
       if (!imageDetails) {
         res.status(404).send("Image not found");
@@ -229,6 +237,6 @@ router.get("/own", function (req, res) {
       console.error(error);
       res.status(500).send("Internal Server Error");
     });
-});
+  });
 
 module.exports = router;

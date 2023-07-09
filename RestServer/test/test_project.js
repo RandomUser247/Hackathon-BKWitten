@@ -1,5 +1,6 @@
 const request = require("supertest");
 const app = require("../app");
+const { expect } = require("chai");
 
 describe("Project Routes", () => {
   describe("GET /api/project/:id", () => {
@@ -9,7 +10,7 @@ describe("Project Routes", () => {
         .expect(200)
         .expect("Content-Type", /json/)
         .expect((response) => {
-          expect(response.body).toHaveProperty("project");
+          expect(response.body).to.have.property("project");
         })
         .end(done);
     });
@@ -25,31 +26,72 @@ describe("Project Routes", () => {
   });
 
   describe("POST /api/project/:id", () => {
+    const projectPayload = {
+        title: "Some Title",
+        description: "Some Description",
+        moretext: "Some more text",
+        userid: 2,
+      
+    };
+    const badProjectPayload = {
+      title: "Some Title",
+      moretext: "Some more text",
+      userid: 2,
+    };
+    const user = {
+      email: "some@dude.de",
+      password: "wordpass",
+    };
+    var agent = request.agent(app);
+
+    beforeEach("Login before project update", (done) => {
+      agent
+        .post("/api/auth")
+        .send(user)
+        .expect(200)
+        .end((err, res) => {
+          if (err) return done(err);
+          done();
+        });
+    });
+
+    afterEach("logout after project update", (done) => {
+      agent
+        .delete("/api/auth")
+        .end((err, res) => {
+          if (err) return done(err);
+          done();
+        })
+    });
+
     it("should update a project by ID and return a successful response", (done) => {
-      request(app)
-        .post("/api/project/1")
-        .send({ title: "New Title", description: "New Description" })
+      console.log("trying to update project");
+      agent
+        .post("/api/project/2")
+        .send(projectPayload)
         .expect(200)
         .expect("Content-Type", /text/)
         .expect("SUCCESS")
-        .end(done);
+        .end((err, res) => {
+          if (err) return done(err);
+          done();
+        });
     });
 
-    it("should return 404 if the project is not found", (done) => {
-      request(app)
+    it("should redirect to login if the project is not owned", (done) => {
+      agent
         .post("/api/project/999")
-        .send({ title: "New Title", description: "New Description" })
-        .expect(404)
-        .expect("Content-Type", /text/)
-        .expect("Bad request or project not found")
+        .send(projectPayload)
+        //expect redirect to login
+        .expect(302)
         .end(done);
     });
 
-    it("should return 406 if invalid input or validation error occurs", (done) => {
-      request(app)
-        .post("/api/project/1")
-        .send({ title: "Short", description: "New Description" })
-        .expect(406)
+    it("should return 400 if invalid input or validation error occurs", (done) => {
+      agent
+        .post("/api/project/2")
+        .send(badProjectPayload)
+        .expect(400)
         .end(done);
     });
   });
@@ -61,7 +103,7 @@ describe("Project Routes", () => {
         .expect(200)
         .expect("Content-Type", /json/)
         .expect((response) => {
-          expect(response.body).toBeDefined();
+          expect(response.body).to.exist;
         })
         .end(done);
     });
@@ -74,7 +116,7 @@ describe("Project Routes", () => {
         .expect(200)
         .expect("Content-Type", /json/)
         .expect((response) => {
-          expect(response.body).toBeDefined();
+          expect(response.body).to.exist;
         })
         .end(done);
     });

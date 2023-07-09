@@ -160,15 +160,15 @@ async function updateProject(projectid, project) {
   const updateProjectQuery =
     "UPDATE projects SET \
                             title=$title, description=$description, vidlink=$vidlink, moretext=$moretext, lastedit=$lastedit\
-                            WHERE id=$projectid";
+                            WHERE ID=$projectid";
 
   return runQuery("run", updateProjectQuery, {
     title: project.title,
     description: project.description,
-    vidlink: project.vidlink,
-    moretext: project.moretext,
+    vidlink: project.vidlink ? project.vidlink : "",
+    moretext: project.moretext ? project.moretext : "",
     lastedit: new Date().getTime(),
-    projectid: projectid,
+    projectid: parseInt(projectid),
   });
 }
 
@@ -358,6 +358,7 @@ module.exports = {
   getOwnerID,
   getUserPassword,
   activateUser,
+  updateLastLogin,
   changePassword,
   insertMedia,
   deleteFile,

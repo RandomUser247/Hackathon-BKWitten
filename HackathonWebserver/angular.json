@@ -75,7 +75,7 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "HackathonWebserver:build"
-          }
+          
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
