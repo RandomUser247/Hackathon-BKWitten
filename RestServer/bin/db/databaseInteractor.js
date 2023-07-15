@@ -159,16 +159,16 @@ async function toggleProjectVisibility(projectid) {
 async function updateProject(projectid, project) {
   const updateProjectQuery =
     "UPDATE projects SET \
-                            title=$title, description=$description, vidlink=$vidlink, moretext=$moretext, lastedit=$lastedit\
-                            WHERE ID=$projectid";
+                            title = $title, description = $description, vidlink = $vidlink, moretext = $moretext, lastedit = $lastedit \
+                            WHERE ID = $projectid";
 
   return runQuery("run", updateProjectQuery, {
-    title: project.title,
-    description: project.description,
-    vidlink: project.vidlink ? project.vidlink : "",
-    moretext: project.moretext ? project.moretext : "",
-    lastedit: new Date().getTime(),
-    projectid: parseInt(projectid),
+    $title: project.title,
+    $description: project.description,
+    $vidlink: project.vidlink ? project.vidlink : "no link",
+    $moretext: project.moretext ? project.moretext : "no text",
+    $lastedit: new Date().getTime(),
+    $projectid: projectid,
   });
 }
 
@@ -246,10 +246,11 @@ async function getProjectsBySearch(search) {
  * @param {string} filepath
  * @returns
  */
-async function insertMedia(userid, filename, filepath) {
+async function insertMedia(projectid, filename, filepath) {
   const insertMediaQuery =
-    "INSERT INTO media (projectid, filename, filepath) VALUES ((SELECT id FROM projects WHERE userid = ?), ?, ?)";
-  return runQuery("run", insertMediaQuery, [userid, filename, filepath]);
+    "INSERT INTO media (projectid, filename, filepath, uploaddate) VALUES (?, ?, ?, ?) \
+    RETURNING *";
+  return runQuery("run", insertMediaQuery, [projectid, filename, filepath, Date.now()]);
 }
 
 async function insertBanner(projectid, filename, filepath) {
@@ -265,7 +266,7 @@ async function insertBanner(projectid, filename, filepath) {
  * @returns
  */
 async function getPath(id) {
-  const filePathQuery = "SELECT FROM media filename, filepath WHERE ID = ?";
+  const filePathQuery = "SELECT filename, filepath FROM media WHERE ID = ?";
   return runQuery("get", filePathQuery, [id]);
 }
 
@@ -281,7 +282,7 @@ async function getPath(id) {
   */
 async function getAllFilePathsByUserID(userid) {
   const filePathQuery =
-    "SELECT filepath, filename, isbanner FROM media JOIN projects ON media.projectid = projects.id WHERE projects.userid = ?";
+    "SELECT * FROM media WHERE projectid = ?";
   return runQuery("all", filePathQuery, [userid]);
 }
 
@@ -319,6 +320,15 @@ async function getOwnerID(projectID) {
   const ownerQuery = "SELECT userid FROM projects WHERE id = ?";
   return runQuery("get", ownerQuery, [projectID]);
 }
+
+async function getMediaOwnerID(mediaID) {
+  const ownerQuery = "SELECT u.ID AS userID FROM users u \
+                      JOIN projects p ON p.userid = u.ID \
+                      JOIN media m ON m.projectid = p.ID \
+                      WHERE m.ID = ?";
+  return runQuery("get", ownerQuery, [mediaID]);
+}
+
 
 /**
  * get password of user by email
@@ -364,5 +374,6 @@ module.exports = {
   deleteFile,
   getAllFilePathsByUserID,
   getAllFilePathsByProjectID,
+  getMediaOwnerID,
   setProjectBanner,
 };

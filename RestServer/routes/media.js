@@ -1,41 +1,74 @@
-
-
 const express = require("express");
-const router = express.Router();
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" }); // Define the destination folder for uploaded files
-const { v4: uuidv4 } = require("uuid");
-const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
+const fs = require("fs");
 var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database("./bin/db/test.db");
 const { log } = require("console");
-const { checkLogin, isOwner } = require("../bin/middleware");
+const { checkLogin, isOwner, isMediaOwner } = require("../bin/middleware");
+const {
+  insertMedia,
+  getPath,
+  getUserProject,
+  getAllFilePathsByUserID,
+  deleteFile,
+} = require("../bin/db/databaseInteractor");
+const { v4: uuidv4 } = require("uuid");
 
-router.use("/", express.static("./public/images"));
-/**
- * @openapi
- * basePath: /api
- */
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Define the destination folder for uploaded files
+//uploads folder is in current working directory
+const uploadFolder = path.join(process.cwd(), "uploads");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const userfolder = path.join(
+      uploadFolder,
+      req.session.user.userid.toString()
+    );
+    //create folder for user if not exists
+    if (!fs.existsSync(userfolder)) {
+      fs.mkdirSync(userfolder);
+    }
+    cb(null, userfolder);
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("File type not supported"), false);
+    }
+  },
+  filename: (req, file, cb) => {
+    const fileExtension = path.extname(file.originalname);
+    const filename = uuidv4() + fileExtension;
+
+    cb(null, filename);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+const router = express.Router();
+router.use("/", express.static("./uploads"));
 
 /**
  * @swagger
- * /media/{id}:
+ * /media:
  *   put:
  *     summary: Uploads an image.
  *     tags: [Media]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The ID of the image.
- *         schema:
- *           type: integer
- *       - in: formData
- *         name: image
- *         required: true
- *         description: The image file to upload.
- *         type: file
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: The image to upload.
+ *                 required: true
  *     security:
  *       - BearerAuth: []
  *     responses:
@@ -68,41 +101,30 @@ router.use("/", express.static("./public/images"));
  */
 router.put(
   "/",
-  [checkLogin,
-  isOwner,
-  upload.single("image"),],
+  [checkLogin, upload.single("image")],
   async function (req, res, next) {
-    try {
-      const file = req.file;
-      log(file);
-      // Get the uploaded file details
-      const filename = `${uuidv4()}.${file.originalname.split(".").pop()}`;
-      const filepath = path.join(uploadFolder, filename);
-      const userid = req.session.user.id;
-      // Insert the file details into the database
-      const insertResult = await database.insertMedia(userid, filename, filepath);
-
-      if (insertResult) {
-        // File inserted successfully
+    // Get the uploaded file details
+    const file = req.file;
+    const filename = file.filename;
+    const filepath = file.path;
+    const project = await getUserProject(req.session.user.userid);
+    // Insert the file details into the database
+    insertMedia(project.id, filename, filepath)
+      .then((result) => {
+        log("result: " + result);
         res.status(200).json({
           success: true,
           message: "Image uploaded successfully",
-          imageid: insertResult.id,
+          imageid: result,
         });
-      } else {
+      })
+      .catch((error) => {
+        console.error(error);
         // Failed to insert file into the database
         res
           .status(500)
           .json({ success: false, message: "Failed to upload image" });
-      }
-    } catch (error) {
-      // Handle any errors that occur during the upload process
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        message: "An error occurred during image upload",
       });
-    }
   }
 );
 
@@ -129,11 +151,11 @@ router.put(
  *       500:
  *         description: Internal Server Error.
  */
-router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
+router.delete("/:id(\\d+)", isMediaOwner, function (req, res, next) {
   const id = req.params.id;
 
   // Retrieve the image filepath from the database
-  database.getPath(id).then((row) => {
+  getPath(id).then((row) => {
     if (!row) {
       res.status(404).send("Image not found");
       return;
@@ -148,15 +170,14 @@ router.delete("/:id(\\d+)", isOwner, function (req, res, next) {
         return;
       }
       // Delete the image from the database
-      database
-        .deleteFile(id)
+      deleteFile(id)
         .then((result) => {
           res.status(200).send("Image deleted successfully");
         })
         .catch((error) => {
           res.status(500).send("Internal Server Error");
           return;
-      });
+        });
     });
   });
 });
@@ -208,7 +229,7 @@ router.get("/:id(\\d+)", function (req, res) {
  * @swagger
  *  /media/own:
  *   get:
- *     summary: Retrieves an image by ID.
+ *     summary: Retrieves own images.
  *     tags: [Media]
  *     security:
  *       - BearerAuth: []
@@ -225,11 +246,10 @@ router.get("/:id(\\d+)", function (req, res) {
  *       500:
  *         description: Internal server error.
  */
-router.get("/own", function (req, res) {
-  const id = req.session.user.id;
+router.get("/own", [checkLogin], function (req, res) {
+  const userid = req.session.user.userid;
   // Retrieve the image details from the database
-  database
-    .getPath(id)
+  getAllFilePathsByUserID(userid)
     .then((imageDetails) => {
       res.send({ imageDetails });
     })
@@ -237,6 +257,6 @@ router.get("/own", function (req, res) {
       console.error(error);
       res.status(500).send("Internal Server Error");
     });
-  });
+});
 
 module.exports = router;

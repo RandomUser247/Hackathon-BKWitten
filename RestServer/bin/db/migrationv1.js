@@ -47,6 +47,7 @@ async function run() {
                     filename VARCHAR(255), \
                     filepath VARCHAR(255), \
                     isbanner INTEGER DEFAULT 0, \
+                    uploaddate INTEGER, \
                     FOREIGN KEY(projectid) REFERENCES projects(ID))",
           (err) => {
             if (err) {

@@ -4,6 +4,7 @@ const {
   getOwnerID,
   updateLastLogin,
   getUserPassword,
+  getMediaOwnerID
 } = require("./db/databaseInteractor");
 const bcrypt = require("bcrypt");
 const FRONTEND_URL = require("./config.json").urls.frontend;
@@ -77,6 +78,28 @@ async function isOwner(req, res, next) {
       res.redirect(FRONTEND_URL + "/login");
     }
     else if (userID == row["userid"]) {
+      log("User is owner");
+      next();
+    } else {
+      res.redirect(FRONTEND_URL + "/login");
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).send("Internal server error");
+  });
+}
+
+
+async function isMediaOwner(req, res, next) {
+  var userID = req.session.user.userid;
+  var mediaID = req.params.id;
+  
+  getMediaOwnerID(mediaID).then((row) => {
+    if (!row) {
+      res.status(404).send("Image not found");
+    }
+    else if (userID == row["userID"]) {
       log("User is owner");
       next();
     } else {
@@ -188,4 +211,5 @@ module.exports = {
   checkLogin,
   checkNotLogin,
   comparePasswords,
+  isMediaOwner
 };
