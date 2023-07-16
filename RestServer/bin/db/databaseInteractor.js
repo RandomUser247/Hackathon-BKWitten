@@ -316,7 +316,7 @@ async function getBanner(projectid) {
  * @description
  * deletes media by id
  */
-async function deleteFile(id) {
+async function deleteMedia(id) {
   const deleteFileQuery = "DELETE FROM media WHERE id = ?";
   return runQuery("run", deleteFileQuery, [id]);
 }
@@ -391,7 +391,7 @@ module.exports = {
   updateLastLogin,
   changePassword,
   insertMedia,
-  deleteFile,
+  deleteMedia,
   getAllFilePathsByUserID,
   getAllFilePathsByProjectID,
   getMediaOwnerID,

@@ -10,12 +10,15 @@ const {
   getPath,
   getUserProject,
   getAllFilePathsByUserID,
-  deleteFile,
+  deleteMedia,
   getBanner,
   insertBanner,
 
 } = require("../bin/db/databaseInteractor");
 const { v4: uuidv4 } = require("uuid");
+
+
+
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Define the destination folder for uploaded files
@@ -168,7 +171,7 @@ router.delete("/:id(\\d+)", isMediaOwner, function (req, res, next) {
         return;
       }
       // Delete the image from the database
-      deleteFile(id)
+      deleteMedia(id)
         .then((result) => {
           res.status(200).send("Image deleted successfully");
         })

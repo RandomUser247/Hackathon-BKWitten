@@ -1,11 +1,12 @@
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const logger = require("morgan");
+const morgan = require("morgan");
 const session = require("express-session");
 const config = require("./bin/config");
 const { checkLogin, checkAdmin } = require("./bin/middleware");
 const { log } = require("console");
+const { logger, errorLogger, devLogger } = require("./bin/logger");
 const { expressjwt: jwt } = require("express-jwt");
 const webtoken = require("jsonwebtoken");
 const { jwt_secret: JWT_SECRET } = require("./bin/config.json");
@@ -49,17 +50,19 @@ const jwtCheck = jwt({
   path: unprotected,
 });
 
-// app.use #################################################################
-app.use(logger("dev"));
+// Logging #################################################################
+
+app.use(logger);
+app.use(errorLogger);
+app.use(devLogger);
+
+// enocoding #################################################################
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
 app.use(session(config.session));
 
 // static routes ############################################################
-// uploads for project media
-// static files for frontend
 app.use("/uploads", express.static(path.join(__dirname, UPLOADPATH)));
 app.use("/public", express.static(path.join(__dirname, "public")));
 

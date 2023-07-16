@@ -14,4 +14,4 @@
 # every file in uploads folder
 **/uploads/*
 # every file in logs folder
-**/logs/*
+**/log/*
