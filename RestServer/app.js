@@ -1,14 +1,12 @@
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
-const session = require("express-session");
+const cors = require("cors");
 const config = require("./bin/config");
-const { checkLogin, checkAdmin } = require("./bin/middleware");
-const { log } = require("console");
+const { checkAdmin } = require("./bin/middleware");
+
 const { logger, errorLogger, devLogger } = require("./bin/logger");
 const { expressjwt: jwt } = require("express-jwt");
-const webtoken = require("jsonwebtoken");
 const { jwt_secret: JWT_SECRET } = require("./bin/config.json");
 const UPLOADPATH = "./uploads/";
 const app = express();
@@ -59,8 +57,9 @@ app.use(devLogger);
 // enocoding #################################################################
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// enable cors for all routes from frontend and backend
+app.use(cors({ origin: [config.urls.frontend, config.urls.backend], credentials: true }));
 app.use(cookieParser());
-app.use(session(config.session));
 
 // static routes ############################################################
 app.use("/uploads", express.static(path.join(__dirname, UPLOADPATH)));

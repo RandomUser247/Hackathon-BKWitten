@@ -49,12 +49,7 @@ const FRONTEND_URL = require("../bin/config.json").urls.frontend;
  */
 router.post(
   "/",
-  [
-    validateEmail,
-    validatePassword,
-    authenticate,
-    saveSession,
-  ],
+  [validateEmail, validatePassword, authenticate],
   async function (req, res) {
     res.status(200).json({ message: "Login successful" });
   }
@@ -71,17 +66,9 @@ router.post(
  *         description: Logout successful. Session destroyed.
  */
 router.delete("/", function (req, res) {
-  log(req.auth)
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("ERROR destroying session: ", err);
-      return res.status(500).json({ message: "Internal error" });
-    }
-    //clear token and session cookie
-    res.clearCookie("connect.sid");
-    res.clearCookie("token");
-    return res.status(200).json({ message: "Logout successful" });
-  });
+  log(req.auth);
+  res.clearCookie("token");
+  return res.status(200).json({ message: "Logout successful" });
 });
 
 /**
@@ -111,11 +98,7 @@ router.delete("/", function (req, res) {
  */
 router.put(
   "/",
-  [
-    validateEmail,
-    validatePassword,
-    comparePasswords,
-  ],
+  [validateEmail, validatePassword, comparePasswords],
   async function (req, res) {
     // Get the user's current password and new password from the request body
     const { password, newPassword, email } = req.body;
@@ -138,7 +121,6 @@ router.put(
     }
   }
 );
-
 
 /**
  * @swagger
