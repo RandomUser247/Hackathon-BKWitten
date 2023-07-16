@@ -1,6 +1,8 @@
 const validator = require("validator");
 const database = require("./db/databaseInteractor.js");
 const session = require("express-session");
+const { log } = require("console");
+
 
 /**
  *

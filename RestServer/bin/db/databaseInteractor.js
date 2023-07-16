@@ -144,7 +144,7 @@ async function getUserProject(userid) {
 async function toggleProjectVisibility(projectid) {
   const toggleProjectVisibilityQuery = `
   UPDATE projects
-  SET visible = NOT visible
+  SET isvisible = NOT isvisible
   WHERE id = ?
   `;
   return runQuery("run", toggleProjectVisibilityQuery, [projectid]);
@@ -199,7 +199,8 @@ async function getProject(projectid) {
     projects.moretext AS moretext,
     projects.lastedit AS lastedit,
     projects.creationdate AS creationdate,
-    (SELECT GROUP_CONCAT(filename, filepath) FROM media WHERE projectid = projects.id) AS files
+    (SELECT GROUP_CONCAT(filename) FROM media WHERE projectid = projects.id AND isbanner = 0) AS files,
+    (SELECT filename FROM media WHERE projectid = projects.id AND isbanner = 1) AS banner
   FROM
     projects
   WHERE
@@ -222,9 +223,11 @@ async function getProjects() {
     projects.moretext AS moretext,
     projects.lastedit AS lastedit,
     projects.creationdate AS creationdate,
-    (SELECT GROUP_CONCAT(filename, filepath) FROM media WHERE projectid = projects.id AND isbanner = 1) AS files
+    (SELECT filename FROM media WHERE projectid = projects.id AND isbanner = 1) AS banner
   FROM
     projects
+  WHERE
+    projects.isvisible = 1
 `;
   return runQuery("all", overviewQuery, []);
 }
@@ -253,11 +256,13 @@ async function insertMedia(projectid, filename, filepath) {
   return runQuery("run", insertMediaQuery, [projectid, filename, filepath, Date.now()]);
 }
 
+
+//Only one banner per project
+//look if banner already exists, if yes, delete old banner
 async function insertBanner(projectid, filename, filepath) {
-  const insertBannerQuery = `INSERT INTO media (projectid, filename, filepath, isbanner) VALUES ($projectid, $filename, $filepath, 1);
-  UPDATE projects SET bannerid = (SELECT id FROM media WHERE projectid = $projectid AND filename = $filename AND filepath = $) WHERE id = ?;
-  `;
-  return runQuery("run", insertBannerQuery, [projectid, filename, filepath]);
+  const insertBannerQuery = `DELETE FROM media WHERE projectid = ? AND isbanner = 1;
+                             INSERT INTO media (projectid, filename, filepath, uploaddate, isbanner) VALUES (?, ?, ?, ?, 1)`
+  return runQuery("run", insertBannerQuery, [projectid, projectid, filename, filepath]);
 }
 
 /**
@@ -291,9 +296,14 @@ async function getAllFilePathsByProjectID(projectid) {
   return runQuery("all", filePathQuery, [projectid]);
 }
 
-async function setProjectBanner(projectid, bannerid) {
-  const setBannerQuery = "UPDATE projects SET bannerid = ? WHERE id = ?";
-  return runQuery("run", setBannerQuery, [bannerid, projectid]);
+async function insertBanner(projectid, filename, filepath) {
+  const setBannerQuery = "INSERT INTO media (projectid, filename, filepath, uploaddate, isbanner) VALUES (?, ?, ?, ?, 1)";
+  return runQuery("run", setBannerQuery, [projectid, filename, filepath, Date.now()]);
+}
+
+async function getBanner(projectid) {
+  const getBannerQuery = "SELECT filename, filepath FROM media WHERE isbanner = 1 AND projectid = (SELECT id FROM projects WHERE id = ?)";
+  return runQuery("get", getBannerQuery, [projectid]);
 }
 
 /**
@@ -355,6 +365,16 @@ async function activateUser(id) {
   return runQuery("run", activateUserQuery, [id]);
 }
 
+async function getUsers() {
+  const getUsersQuery = "SELECT * FROM users";
+  return runQuery("all", getUsersQuery, []);
+}
+
+async function getRecentMedia() {
+  const getRecentMediaQuery = "SELECT * FROM media ORDER BY uploaddate DESC LIMIT 50";
+  return runQuery("all", getRecentMediaQuery, []);
+}
+
 module.exports = {
   getUserByEmail,
   getUserID,
@@ -375,5 +395,8 @@ module.exports = {
   getAllFilePathsByUserID,
   getAllFilePathsByProjectID,
   getMediaOwnerID,
-  setProjectBanner,
+  insertBanner,
+  getBanner,
+  getUsers,
+  getRecentMedia,
 };

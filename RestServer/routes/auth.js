@@ -50,7 +50,6 @@ const FRONTEND_URL = require("../bin/config.json").urls.frontend;
 router.post(
   "/",
   [
-    checkNotLogin,
     validateEmail,
     validatePassword,
     authenticate,
@@ -72,12 +71,15 @@ router.post(
  *         description: Logout successful. Session destroyed.
  */
 router.delete("/", function (req, res) {
+  log(req.auth)
   req.session.destroy((err) => {
     if (err) {
       console.error("ERROR destroying session: ", err);
       return res.status(500).json({ message: "Internal error" });
     }
-    req.session = null;
+    //clear token and session cookie
+    res.clearCookie("connect.sid");
+    res.clearCookie("token");
     return res.status(200).json({ message: "Logout successful" });
   });
 });
@@ -88,6 +90,8 @@ router.delete("/", function (req, res) {
  *   put:
  *     summary: Update user's password.
  *     tags: [Authentication]
+ *     security:
+ *       - JWT: []
  *     requestBody:
  *       description: User's current and new password.
  *       required: true
@@ -108,7 +112,6 @@ router.delete("/", function (req, res) {
 router.put(
   "/",
   [
-    checkLogin,
     validateEmail,
     validatePassword,
     comparePasswords,
@@ -116,10 +119,10 @@ router.put(
   async function (req, res) {
     // Get the user's current password and new password from the request body
     const { password, newPassword, email } = req.body;
-    log(req.session.user);
+    log(req.user);
     try {
       database
-        .changePassword(req.session.user.id, newPassword)
+        .changePassword(req.auth.userid, newPassword)
         .then(() => {
           return res
             .status(200)

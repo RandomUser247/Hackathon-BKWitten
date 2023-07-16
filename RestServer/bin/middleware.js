@@ -1,4 +1,5 @@
 const { log, info } = require("console");
+const jwt = require("jsonwebtoken");
 const {
   getUserByEmail,
   getOwnerID,
@@ -7,39 +8,36 @@ const {
   getMediaOwnerID
 } = require("./db/databaseInteractor");
 const bcrypt = require("bcrypt");
+const JWT_SECRET = require("./config.json").jwt_secret;
 const FRONTEND_URL = require("./config.json").urls.frontend;
 const BACKEND_URL = require("./config.json").urls.backend;
 
-function authenticate(req, res, next) {
-  const { email, password } = req.body;
-  console.log("authenticating");
-  getUserByEmail(email)
-    .then((user) => {
-      if (!user) {
-        res.status(406).send("Wrong credentials");
-        return;
-      }
-      bcrypt
-        .compare(password, user.hashpass)
-        .then((result) => {
-          if (!result) {
-            res.status(406).send("Wrong credentials");
-            return;
-          }
-          updateLastLogin(user.ID);
-          req.session.user = { userid: user.ID, email: user.email };
-          next();
-        })
-        .catch((err) => {
-          console.log(err);
-          res.status(500).send("Internal server error");
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send("Internal server error");
-    });
+async function authenticate(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    const user = await getUserByEmail(email);
+
+    if (!user || !(await bcrypt.compare(password, user.hashpass))) {
+      res.status(406).send('Wrong credentials');
+      return;
+    }
+
+    await updateLastLogin(user.ID);
+
+    const token = jwt.sign(
+      { userid: user.ID, email: user.email, admin: user.isadmin },
+      JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.cookie('token', token, { httpOnly: true, sameSite: 'strict' });
+    next();
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Authentification error');
+  }
 }
+
 
 /**
  * Saves the session
@@ -70,7 +68,7 @@ function saveSession(req, res, next) {
  * This function is used in the routes for the project page.
  */
 async function isOwner(req, res, next) {
-  var userID = req.session.user.userid;
+  var userID = req.auth.userid;
   var projectID = req.params.id;
 
   getOwnerID(projectID).then((row) => {
@@ -92,7 +90,7 @@ async function isOwner(req, res, next) {
 
 
 async function isMediaOwner(req, res, next) {
-  var userID = req.session.user.userid;
+  var userID = req.auth.userid;
   var mediaID = req.params.id;
   
   getMediaOwnerID(mediaID).then((row) => {
@@ -125,7 +123,7 @@ async function isMediaOwner(req, res, next) {
  * This function is used in the routes for the login and the home page.
  */
 async function isactivated(req, res, next) {
-  var activation = req.session.user.activated;
+  var activation = req.auth.activated;
   if (activation == 1) {
     return next();
   }
@@ -140,11 +138,12 @@ async function isactivated(req, res, next) {
  */
 async function checkAdmin(req, res, next) {
   try {
-    const user = await getUserByEmail(req.session.user.email);
-    if (user.isadmin == 1) {
+    const token = req.auth;
+    if (token.admin == 1) {
       next();
-    } else {
-      res.status(401).send("Unauthorized access");
+    }
+    else {
+      res.status(403).send("Forbidden");
     }
   } catch (err) {
     console.error(err);
@@ -172,7 +171,7 @@ async function checkFileSize(req, res, next) {
  */
 function checkLogin(req, res, next) {
   info("Checking if user is logged in");
-  if (req.session.user) {
+  if (req.user) {
     next();
   } else {
     res.status(401).send("Unauthorized access");
@@ -180,7 +179,7 @@ function checkLogin(req, res, next) {
 }
 
 function checkNotLogin(req, res, next) {
-  if (req.session.user) {
+  if (req.cookies.token) {
     res.status(401).send("Already logged in");
   } else {
     next();

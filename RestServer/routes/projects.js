@@ -62,6 +62,8 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
  *   post:
  *     summary: Updates a project by ID.
  *     tags: [Project]
+ *     security:
+ *       - JWT: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -69,12 +71,13 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
  *         description: The ID of the project.
  *         schema:
  *           type: integer
- *       - in: body
- *         name: project
- *         required: true
- *         description: The updated project data.
- *         schema:
- *           $ref: '#/components/schemas/ProjectInput'
+ *     requestBody:
+ *       description: Project data.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ProjectInput'
  *     responses:
  *       200:
  *         description: Project updated successfully.
@@ -84,12 +87,12 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
  *         description: Bad request or project not found.
  *       406:
  *         description: Invalid input or validation error.
- *       405:
+ *       500:
  *         description: Internal server error.
  */
 router.post(
   "/:id",
-  [checkLogin, val.validateProjectID, val.validateProject, isOwner],
+  [val.validateProjectID, val.validateProject, isOwner],
   async function (req, res) {
     // validate body data
     var params = req.body;
@@ -102,7 +105,7 @@ router.post(
         res.send("SUCCESS");
       })
       .catch((err) => {
-        res.status(405).send("internal error occured");
+        res.status(500).send("internal error occured");
       });
   }
 );
