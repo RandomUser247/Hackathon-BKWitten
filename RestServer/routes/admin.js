@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const {
   getUsers,
+  getUserByID,
   getRecentMedia,
   toggleProjectVisibility,
   deleteMedia,
@@ -76,7 +77,7 @@ router.get("/users", function (req, res) {
  *         description: Internal server error.
  */
 router.get("/users/:id(\\d+)", function (req, res) {
-  getUserByID()
+  getUserByID(req.params.id)
     .then((user) => {
       res
         .status(200)
@@ -109,7 +110,6 @@ router.get("/users/:id(\\d+)", function (req, res) {
  *         description: Internal server error.
  */
 router.get("/logs", async function (req, res) {
-
   const logPath = path.join(__dirname, "../log/access.log");
   fs.readFile(logPath, "utf8", function (err, data) {
     if (err) {
@@ -141,17 +141,15 @@ router.get("/logs", async function (req, res) {
  *         description: Internal server error.
  */
 router.get("/errors", async function (req, res) {
-
-    const errorPath = path.join(__dirname, "../log/error.log");
-    fs.readFile(errorPath, "utf8", function (err, data) {
-        if (err) {
-            res.status(500).send("Internal Server Error");
-            return;
-        }
-        res.status(200).send(data);
-    });
+  const errorPath = path.join(__dirname, "../log/error.log");
+  fs.readFile(errorPath, "utf8", function (err, data) {
+    if (err) {
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+    res.status(200).send(data);
+  });
 });
-
 
 /**
  * @swagger
@@ -167,7 +165,9 @@ router.get("/errors", async function (req, res) {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/media'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/media'
  *       403:
  *         description: Forbidden.
  *       500:
@@ -176,7 +176,9 @@ router.get("/errors", async function (req, res) {
 router.get("/media", function (req, res) {
   getRecentMedia()
     .then((media) => {
-      res.status(200).json({ msg: "Media retrieved successfully", media: media });
+      res
+        .status(200)
+        .json({ msg: "Media retrieved successfully", media });
     })
     .catch((error) => {
       res.status(500).send("Internal Server Error");
@@ -204,17 +206,24 @@ router.get("/media", function (req, res) {
  *         description: Media deleted successfully.
  *       403:
  *         description: Forbidden.
+ *       404:
+ *         description: Media not found.
  *       500:
  *         description: Internal server error.
  */
 router.delete("/media/:id(\\d+)", async function (req, res) {
   const file = await getPath(req.params.id);
-    fs.unlink(file.filepath, (err) => {
-        if (err) {
-            res.status(500).send("Internal Server Error");
-            return;
-        }
-    });
+  if (!file) {
+    res.status(404).send("Media not found");
+    return;
+  }
+  else{
+  fs.unlink(file.filepath, (err) => {
+    if (err) {
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+  });
   deleteMedia(req.params.id)
     .then(() => {
       res.status(200).send("Media deleted successfully");
@@ -223,6 +232,7 @@ router.delete("/media/:id(\\d+)", async function (req, res) {
       res.status(500).send("Internal Server Error");
       return;
     });
+  }
 });
 
 /**
@@ -245,6 +255,8 @@ router.delete("/media/:id(\\d+)", async function (req, res) {
  *         description: Successfully toggled.
  *       403:
  *         description: Forbidden.
+ *       404:
+ *         description: Project not found.
  *       500:
  *         description: Internal server error.
  */
@@ -260,3 +272,62 @@ router.post("/project/:id(\\d+)", function (req, res) {
 });
 
 module.exports = router;
+
+/**
+ * @swagger
+ * tags:
+ *   name: Admin
+ *   description: Admin routes
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *       - ID
+ *       - name
+ *       - email
+ *       - isAdmin
+ *       - lastLogin
+ *       properties:
+ *        id:
+ *          type: integer
+ *          description: The user ID.
+ *        name:
+ *          type: string
+ *        email:
+ *          type: string
+ *        isAdmin:
+ *          type: boolean
+ *        lastLogin:
+ *          type: integer
+ *        example:
+ *          id: 1
+ *          email: admin@school.de
+ *          name: admin
+ *          isAdmin: true
+ *          lastLogin: 1612345678
+ *     media:
+ *       type: object
+ *       required:
+ *       - ID
+ *       - filepath
+ *       - filename
+ *       - uploadDate
+ *       - isBanner
+ *       properties:
+ *        ID:
+ *          type: integer
+ *          description: The media ID.
+ *        filename:
+ *          type: string
+ *        filepath:
+ *          type: string
+ *        isBanner:
+ *          type: boolean
+ *        uploadDate:
+ *          type: integer
+ *        projectID:
+ *          type: integer
+ *        projectTitle:
+ *          type: string    
+ */

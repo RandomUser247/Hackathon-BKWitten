@@ -1,7 +1,11 @@
 var express = require("express");
 var router = express.Router();
-var database = require("../bin/db/databaseInteractor");
-const { checkAdmin, checkLogin, isOwner } = require("../bin/middleware");
+var {
+  getProject,
+  getProjects,
+  getProjectsBySearch,
+} = require("../bin/db/databaseInteractor");
+const { isOwner } = require("../bin/middleware");
 const val = require("../bin/validators");
 
 // project endpoint
@@ -40,7 +44,7 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
     // get project id
     var _id = req.params.id;
     // get project data
-    var project = await database.getProject(_id);
+    var project = await getProject(_id);
     if (!project) {
       res.status(404).send("project not found");
     }
@@ -98,8 +102,7 @@ router.post(
     var params = req.body;
     var err = "";
     console.log("initiating project update");
-    database
-      .updateProject(req.params.id, req.body)
+    updateProject(req.params.id, req.body)
       .then((result) => {
         console.log("successful project update");
         res.send("SUCCESS");
@@ -132,8 +135,7 @@ router.options("/overview", function (req, res) {
  *         description: Internal server error.
  */
 router.get("/overview", async function (req, res) {
-  database
-    .getProjects()
+  getProjects()
     .then((result) => {
       res.send(result);
     })
@@ -172,8 +174,7 @@ router.options("/search/:search", function (req, res) {
  *         description: Internal server error.
  */
 router.get("/search/:search", async function (req, res) {
-  database
-    .getProjectsBySearch(req.params.search)
+  getProjectsBySearch(req.params.search)
     .then((result) => {
       res.send(result);
     })

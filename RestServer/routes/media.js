@@ -37,13 +37,6 @@ const storage = multer.diskStorage({
     }
     cb(null, userfolder);
   },
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) {
-      cb(null, true);
-    } else {
-      cb(new Error("File type not supported"), false);
-    }
-  },
   filename: (req, file, cb) => {
     const fileExtension = path.extname(file.originalname);
     const filename = uuidv4() + fileExtension;
@@ -52,7 +45,16 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const fileFilter = (req, file, cb) => {
+  const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
+  if (allowedFileTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("File type not supported"), false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 const router = express.Router();
@@ -102,10 +104,11 @@ router.put(
   [upload.single("image")],
   async function (req, res, next) {
     // Get the uploaded file details
-    const file = req.file;
-    const filename = file.filename;
-    const filepath = file.path;
+
     const project = await getUserProject(req.auth.userid);
+    const file = req.file;
+    const filename = path.join(project.id.toString(), file.filename);
+    const filepath = file.path;
     // Insert the file details into the database
     insertMedia(project.id, filename, filepath)
       .then((result) => {
@@ -302,9 +305,7 @@ router.get("/banner/:id(\\d+)", function (req, res) {
  */
 router.put("/banner", [upload.single("image")], async function (req, res, next) {
   // Get the uploaded file details
-  const file = req.file;
-  const filename = file.filename;
-  const filepath = file.path;
+  
   const project = await getUserProject(req.auth.userid);
   const oldBanner = await getBanner(project.id);
   if (oldBanner) {
@@ -316,6 +317,11 @@ router.put("/banner", [upload.single("image")], async function (req, res, next) 
       }
     });
   }
+
+  const file = req.file;
+  const filename = path.join(project.id, file.filename);
+  const filepath = file.path;
+
   // Insert the file details into the database
   insertBanner(project.id, filename, filepath)
     .then((result) => {
