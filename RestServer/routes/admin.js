@@ -11,6 +11,10 @@ const {
   getPath,
 } = require("../bin/db/databaseInteractor");
 
+// importing limiter for admin routes
+const { adminLimiter } = require("../bin/limiters");
+router.use(adminLimiter);
+
 /**
  * @swagger
  * /admin/users:
@@ -272,6 +276,7 @@ router.post("/project/:id(\\d+)", function (req, res) {
 });
 
 module.exports = router;
+
 
 /**
  * @swagger

@@ -5,6 +5,7 @@ var bcrypt = require("bcrypt");
 var helpers = require("../bin/helpers");
 var database = require("../bin/db/databaseInteractor");
 const { log } = require("console");
+
 const {
   validateEmail,
   validatePassword,
@@ -18,6 +19,9 @@ const {
   checkNotLogin,
   comparePasswords,
 } = require("../bin/middleware");
+
+const { authLimiter, registerLimiter } = require("../bin/limiters");
+
 
 const FRONTEND_URL = require("../bin/config.json").urls.frontend;
 
@@ -49,7 +53,8 @@ const FRONTEND_URL = require("../bin/config.json").urls.frontend;
  */
 router.post(
   "/",
-  [validateEmail, validatePassword, authenticate],
+  // insert rate limiter here
+  [authLimiter, validateEmail, validatePassword, authenticate],
   async function (req, res) {
     res.status(200).json({ message: "Login successful" });
   }
@@ -98,7 +103,7 @@ router.delete("/", function (req, res) {
  */
 router.put(
   "/",
-  [validateEmail, validatePassword, comparePasswords],
+  [registerLimiter, validateEmail, validatePassword, comparePasswords],
   async function (req, res) {
     // Get the user's current password and new password from the request body
     const { password, newPassword, email } = req.body;

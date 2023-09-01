@@ -131,7 +131,6 @@ async function getProjectsBySearch(search) {
 }
 
 
-
 /**
  * get owner id of project by id
  * @param {int} projectID

@@ -17,6 +17,7 @@ const {
 } = require("../bin/db/databaseInteractor");
 const { v4: uuidv4 } = require("uuid");
 
+const { uploadLimiter } = require("../bin/limiters");
 
 
 
@@ -101,7 +102,7 @@ const router = express.Router();
  */
 router.put(
   "/",
-  [upload.single("image")],
+  [uploadLimiter, upload.single("image")],
   async function (req, res, next) {
     // Get the uploaded file details
 
@@ -221,6 +222,7 @@ router.get("/:id(\\d+)", function (req, res) {
         res.status(404).send("Image not found");
         return;
       }
+      log(imageDetails)
       res.sendFile(imageDetails.filepath);
     })
     .catch((error) => {
@@ -303,7 +305,7 @@ router.get("/banner/:id(\\d+)", function (req, res) {
  *       500:
  *         description: Failed to upload image or internal server error.
  */
-router.put("/banner", [upload.single("image")], async function (req, res, next) {
+router.put("/banner", [uploadLimiter, upload.single("image")], async function (req, res, next) {
   // Get the uploaded file details
   
   const project = await getUserProject(req.auth.userid);

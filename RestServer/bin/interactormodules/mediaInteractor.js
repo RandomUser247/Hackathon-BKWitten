@@ -37,7 +37,7 @@ async function getAllFilePathsByProjectID(projectid) {
  * @returns
  */
 async function getPath(id) {
-  const filePathQuery = "SELECT filename FROM media WHERE ID = ?";
+  const filePathQuery = "SELECT filename, filepath FROM media WHERE ID = ?";
   return runQuery("get", filePathQuery, [id]);
 }
 /**
