@@ -1,5 +1,10 @@
 {
   "port": 8080,
+  "uploadFolder": "../uploads",
+  "urls": {
+    "frontend": "http://localhost:4200",
+    "backend": "http://localhost:8080"
+  },
   "logging": {
     "enabled": true,
     "level": "info",
@@ -21,6 +26,7 @@
     "saveUninitialized": false,
     "secret": "shhhh, very secret"
   },
+  "jwt_secret": "we have to change this later",
   "swaggerOptions": {
     "swaggerDefinition": {
       "openapi": "3.0.0",
@@ -33,6 +39,16 @@
           "url": "https://spdx.org/licenses/MIT.html"
         }
       },
+      "securityDefinitions":{
+        "JWT":{
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header"}},
+      "security": [
+        {
+          "JWT": []
+        }
+      ],
       "servers": [
         {
           "url": "http://localhost:8080/api",

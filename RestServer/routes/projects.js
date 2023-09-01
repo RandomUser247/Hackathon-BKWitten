@@ -1,6 +1,11 @@
 var express = require("express");
 var router = express.Router();
-var database = require("../bin/db/databaseInteractor");
+var {
+  getProject,
+  getProjects,
+  getProjectsBySearch,
+} = require("../bin/db/databaseInteractor");
+const { isOwner } = require("../bin/middleware");
 const val = require("../bin/validators");
 
 // project endpoint
@@ -39,12 +44,12 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
     // get project id
     var _id = req.params.id;
     // get project data
-    var project = await database.getProject(_id);
+    var project = await getProject(_id);
     if (!project) {
       res.status(404).send("project not found");
     }
     // send project data
-    res.status(200).json({ project: project });
+    else res.send({ project: project });
   } catch (err) {
     console.error(err);
     res.status(500).send("an internal error has occured");
@@ -61,6 +66,8 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
  *   post:
  *     summary: Updates a project by ID.
  *     tags: [Project]
+ *     security:
+ *       - JWT: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -68,42 +75,43 @@ router.get("/:id(\\d+)", [val.validateProjectID], async function (req, res) {
  *         description: The ID of the project.
  *         schema:
  *           type: integer
- *       - in: body
- *         name: project
- *         required: true
- *         description: The updated project data.
- *         schema:
- *           $ref: '#/components/schemas/ProjectInput'
+ *     requestBody:
+ *       description: Project data.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ProjectInput'
  *     responses:
  *       200:
  *         description: Project updated successfully.
+ *       401:
+ *         description: Unauthorized access.
  *       404:
  *         description: Bad request or project not found.
  *       406:
  *         description: Invalid input or validation error.
- *       405:
+ *       500:
  *         description: Internal server error.
  */
-router.post("/:id", [val.validateProjectID], async function (req, res) {
-  // validate body data
-  var params = req.body;
-  var err = "";
-  if (params.title) {
-    if (params.title.trim().length < 5) {
-      err += "you need a title at least 5 characters long \n";
-      res.status(406).send(err);
-      return;
-    }
+router.post(
+  "/:id",
+  [val.validateProjectID, val.validateProject, isOwner],
+  async function (req, res) {
+    // validate body data
+    var params = req.body;
+    var err = "";
+    console.log("initiating project update");
+    updateProject(req.params.id, req.body)
+      .then((result) => {
+        console.log("successful project update");
+        res.send("SUCCESS");
+      })
+      .catch((err) => {
+        res.status(500).send("internal error occured");
+      });
   }
-  database
-    .updateProject(req.params.id, req.body)
-    .then((result) => {
-      res.send("SUCCESS");
-    })
-    .catch((err) => {
-      res.status(405).send("internal error occured");
-    });
-});
+);
 
 router.options("/overview", function (req, res) {
   res.header("Allow", "GET,OPTIONS");
@@ -127,8 +135,7 @@ router.options("/overview", function (req, res) {
  *         description: Internal server error.
  */
 router.get("/overview", async function (req, res) {
-  database
-    .getProjects()
+  getProjects()
     .then((result) => {
       res.send(result);
     })
@@ -167,8 +174,7 @@ router.options("/search/:search", function (req, res) {
  *         description: Internal server error.
  */
 router.get("/search/:search", async function (req, res) {
-  database
-    .getProjectsBySearch(req.params.search)
+  getProjectsBySearch(req.params.search)
     .then((result) => {
       res.send(result);
     })

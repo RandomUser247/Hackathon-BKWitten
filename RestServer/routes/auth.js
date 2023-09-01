@@ -5,8 +5,25 @@ var bcrypt = require("bcrypt");
 var helpers = require("../bin/helpers");
 var database = require("../bin/db/databaseInteractor");
 const { log } = require("console");
-const val = require("../bin/validators");
-const { authenticate, saveSession } = require("../bin/middleware");
+
+const {
+  validateEmail,
+  validatePassword,
+  validateCurrentPassword,
+  validateNewPassword,
+} = require("../bin/validators");
+const {
+  authenticate,
+  saveSession,
+  checkLogin,
+  checkNotLogin,
+  comparePasswords,
+} = require("../bin/middleware");
+
+const { authLimiter, registerLimiter } = require("../bin/limiters");
+
+
+const FRONTEND_URL = require("../bin/config.json").urls.frontend;
 
 /**
  * @swagger
@@ -22,25 +39,22 @@ const { authenticate, saveSession } = require("../bin/middleware");
  *             $ref: '#/components/schemas/LoginRequest'
  *     responses:
  *       200:
- *         description: Successful login. User is redirected to the home page.
- *       400: 
+ *         description: Successful login. User is redirected to the home page.{}
+ *       400:
  *         description: Invalid request. Missing email or password.
  *       401:
- *         description: Unauthorized. Wrong credentials provided.
+ *         description: Already logged in.
  *       406:
  *         description: Wrong credentials provided.
  *       500:
  *         description: An error occurred during login.
+ *       503:
+ *         description: Service Unavailable. Database is not available.
  */
 router.post(
   "/",
-  [
-    val.checkNotLogin,
-    val.validateEmail,
-    val.validatePassword,
-    authenticate,
-    saveSession,
-  ],
+  // insert rate limiter here
+  [authLimiter, validateEmail, validatePassword, authenticate],
   async function (req, res) {
     res.status(200).json({ message: "Login successful" });
   }
@@ -57,14 +71,9 @@ router.post(
  *         description: Logout successful. Session destroyed.
  */
 router.delete("/", function (req, res) {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("ERROR destroying session: ", err);
-      return res.status(500).json({ message: "Internal error" });
-    }
-    req.session = null;
-    return res.status(200).json({ message: "Logout successful" });
-  });
+  log(req.auth);
+  res.clearCookie("token");
+  return res.status(200).json({ message: "Logout successful" });
 });
 
 /**
@@ -73,6 +82,8 @@ router.delete("/", function (req, res) {
  *   put:
  *     summary: Update user's password.
  *     tags: [Authentication]
+ *     security:
+ *       - JWT: []
  *     requestBody:
  *       description: User's current and new password.
  *       required: true
@@ -92,19 +103,14 @@ router.delete("/", function (req, res) {
  */
 router.put(
   "/",
-  [
-    val.checkLogin,
-    val.validateEmail,
-    val.validatePassword,
-    helpers.comparePasswords,
-  ],
+  [registerLimiter, validateEmail, validatePassword, comparePasswords],
   async function (req, res) {
     // Get the user's current password and new password from the request body
     const { password, newPassword, email } = req.body;
-    log(req.session.user)
+    log(req.user);
     try {
       database
-        .changePassword(req.session.user.id, newPassword)
+        .changePassword(req.auth.userid, newPassword)
         .then(() => {
           return res
             .status(200)
