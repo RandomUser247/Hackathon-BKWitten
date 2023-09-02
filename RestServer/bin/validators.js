@@ -10,6 +10,8 @@ const { log } = require("console");
  * @param {*} res
  * @param {*} next
  * @returns
+ * @description
+ * This function checks if the user provided a valid password
  */
 function validatePassword(req, res, next) {
   const { password } = req.body;
@@ -35,6 +37,8 @@ function validatePassword(req, res, next) {
  * @param {*} res
  * @param {*} next
  * @returns
+ * @description
+ * This function checks if the user provided a valid email
  */
 function validateEmail(req, res, next) {
   const { email } = req.body;
@@ -103,6 +107,9 @@ function validateCurrentPassword(req, res, next) {
  * @param {*} res
  * @param {*} next
  * @returns
+ * @description
+ * This function checks if the user provided a valid project
+ * A valid project is an object with a title and a description
  */
 function validateProject(req, res, next) {
   const project = req.body;

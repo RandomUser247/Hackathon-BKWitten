@@ -58,8 +58,20 @@ async function insertMedia(projectid, filename, filepath) {
   ]);
 }
 
-//Only one banner per project
-//look if banner already exists, if yes, delete old banner
+/**
+ * insert filepath of banner into database where projectid is retrieved from projects table where userid is userid
+ * @param {int} projectid
+ * @param {string} filename
+ * @param {string} filepath
+ * @returns
+ * @throws Error
+ * @async
+ * @name insertBanner
+ * @description
+ * insert filepath of banner into database where projectid is retrieved from projects table where userid is userid
+ * @todo add validation
+ * @todo add tests
+ */
 async function insertBanner(projectid, filename, filepath) {
   const insertBannerQuery = `DELETE FROM media WHERE projectid = ? AND isbanner = 1;
                                  INSERT INTO media (projectid, filename, filepath, uploaddate, isbanner) VALUES (?, ?, ?, ?, 1)`;

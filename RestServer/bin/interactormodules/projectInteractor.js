@@ -64,17 +64,10 @@ async function updateProject(projectid, project) {
  * @param {int} projectid
  * @returns Promise
  * @throws Error
- * @example
- * {
- * id: 1,
- * title: "test",
- * description: "test",
- * vidlink: "test",
- * moretext: "test",
- * lastedit: 1620230400000,
- * creationdate: 1620230400000,
- * files: "test/test.jpg,test/test2.jpg"
- * }
+ * @async
+ * @name getProject
+ * @description
+ * try to get project by id and return project object
  */
 async function getProject(projectid) {
   const projectQuery = `

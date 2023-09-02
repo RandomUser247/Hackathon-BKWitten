@@ -1,20 +1,34 @@
 # 💻Hackathon-BKWitten🚀
 
+## Introduction
 
+  This website is supposed to be a tool for the Hackathon of the BK Witten. 
+  It is supposed to give the students a platform to share their projects and ideas with each other.
+  
+  ### Features
 
-## used Versions
+  - Login/Logout
+  - editing projects
+  - creating projects
+  - viewing and sorting projects
+  - Overview of the Hackathon and sponsors
+  
+  ### Technologies
 
-  Angular CLI: 15.2.7
+  - Angular
+  - express
+  - sqlite3
+  - nodeJS
+  - Bootstrap
   
-  Node: 18.16.0
+  ### Languages
+  - HTML
+  - CSS
+  - TypeScript
+  - JavaScript
   
-  @angular-devkit/architect    0.1502.7 
-  
-  @angular-devkit/core         15.2.7
-  
-  @ng-bootstrap/ng-bootstrap": 14.1.1
 
-### Project Setup
+## Project Setup
 
   Clone Repository to your machine
   
@@ -39,4 +53,8 @@
 
   run backend server and call /api/docs for an overview
 
-  
+  ### Database Setup
+
+  run 'npm initdb' to initialize the database
+  run 'npm createDummy' to create dummy data
+

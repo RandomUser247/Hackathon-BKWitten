@@ -38,7 +38,7 @@ async function updateLastLogin(userId) {
  * hashpass: "Hufaehf9fabks0134sadhu",
  */
 async function getUserByEmail(email) {
-  const getUserbyEmailQuery = "SELECT * FROM users WHERE email = ?"; //returns all user data
+  const getUserbyEmailQuery = "SELECT * FROM users WHERE email = ?"; 
   return runQuery("get", getUserbyEmailQuery, [email]);
 }
 
@@ -48,15 +48,16 @@ async function getUserByEmail(email) {
  * @returns Promise
  */
 async function getUserByID(id) {
-  const getUserbyIDQuery = "SELECT * FROM users WHERE id = ?"; //returns all user data
+  const getUserbyIDQuery = "SELECT * FROM users WHERE id = ?"; 
   return runQuery("get", getUserbyIDQuery, [id]);
 }
 
-// TODO: getUserByEmail should return also projectID and projectTitle
 /**
  *  get userID by Email
  * @param {string} email
  * @returns Promise
+ * @description returns only the id of the user
+ * @todo getUserByEmail should return also projectID and projectTitle
  */
 async function getUserID(email) {
   const useridQuery = "SELECT id FROM users WHERE email = ?";

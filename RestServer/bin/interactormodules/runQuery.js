@@ -6,6 +6,11 @@ const db = require("./databaseConnection").db;
  * @param {sqlQueryString} statement
  * @param {[*]} params
  * @returns
+ * @throws Error
+ * @async
+ * @name runQuery
+ * @description
+ * wrapper function to run a query and return the result
  */
 async function runQuery(func, statement, params) {
     try {
@@ -20,7 +25,12 @@ async function runQuery(func, statement, params) {
    * @param {string} func
    * @param {sqlQueryString} statement
    * @param {{*}} params
-   * @returns Promise
+   * @returns 
+   * @throws Error
+   * @async
+   * @name runQueryPromise
+   * @description
+   * generic function to run a query and return the promise
    */
 async function runQueryPromise(func, statement, params) {
     return new Promise((resolve, reject) => {

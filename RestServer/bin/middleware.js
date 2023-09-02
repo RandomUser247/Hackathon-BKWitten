@@ -12,6 +12,27 @@ const JWT_SECRET = require("./config.json").jwt_secret;
 const FRONTEND_URL = require("./config.json").urls.frontend;
 const BACKEND_URL = require("./config.json").urls.backend;
 
+
+// documentation:
+// https://www.npmjs.com/package/express-jwt
+// https://www.npmjs.com/package/jsonwebtoken
+// https://www.npmjs.com/package/cookie-parser
+// https://www.npmjs.com/package/cors
+// https://www.npmjs.com/package/bcrypt
+// https://www.npmjs.com/package/express-session
+
+/**
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
+ * @throws
+ * @description
+ * This function checks if the user provided a valid email and password pair.
+ * If not, it sends a 406 status code.
+ * If yes, it calls the next function and adds the user token to the request.
+ * This function is used in the routes for the login page.
+ */
 async function authenticate(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -88,7 +109,18 @@ async function isOwner(req, res, next) {
   });
 }
 
-
+/**
+ * Checks if the user is the owner of the media
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
+ * @description
+ * This function checks if the user is the owner of the media.
+ * If the user is the owner, the next function is called.
+ * If the user is not the owner, the user is redirected to the login page.
+ * This function is used in the routes for the media page.
+ */
 async function isMediaOwner(req, res, next) {
   var userID = req.auth.userid;
   var mediaID = req.params.id;
